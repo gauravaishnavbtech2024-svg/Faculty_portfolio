@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { headers } from 'next/headers';
-import { currentOwner, supabaseServer } from '@/lib/supabase';
+import { currentOwner, supabaseServer, supabaseAdmin } from '@/lib/supabase';
+import { slugify, generateUniqueSlug } from '@/lib/slug';
 import { setStatus } from './actions';
 import CopyButton from '@/components/CopyButton';
 
@@ -47,7 +48,19 @@ export default async function Dashboard() {
 
   const h = await headers();
   const origin = process.env.NEXT_PUBLIC_SITE_URL ?? `${h.get('x-forwarded-proto') ?? 'http'}://${h.get('host')}`;
-  const url = `${origin}/f/${p.slug}`;
+  
+  let currentSlug = p.slug;
+  if (p.data?.name) {
+    const expectedBase = slugify(p.data.name);
+    if (expectedBase && !currentSlug.startsWith(expectedBase)) {
+      const newSlug = await generateUniqueSlug(p.data.name, me.ownerEmail);
+      const admin = supabaseAdmin();
+      await admin.from('portfolios').update({ slug: newSlug, updated_at: new Date().toISOString() }).eq('owner_email', me.ownerEmail);
+      currentSlug = newSlug;
+    }
+  }
+
+  const url = `${origin}/f/${currentSlug}`;
   const live = p.status === 'published';
 
   return (
@@ -145,7 +158,7 @@ export default async function Dashboard() {
           <div className="flex items-center gap-2 shrink-0">
             <CopyButton text={url} />
             <Link
-              href={`/f/${p.slug}`}
+              href={`/f/${currentSlug}`}
               target="_blank"
               className="inline-flex items-center gap-1.5 rounded-lg bg-white border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-[#2547d0] transition-colors shadow-sm"
             >

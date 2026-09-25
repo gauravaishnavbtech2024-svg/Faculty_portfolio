@@ -4,6 +4,7 @@ import mammoth from 'mammoth';
 import { GoogleGenAI } from '@google/genai';
 import { currentOwner, supabaseAdmin } from '@/lib/supabase';
 import { PortfolioData } from '@/lib/schema';
+import { generateUniqueSlug } from '@/lib/slug';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60;
@@ -133,22 +134,22 @@ export async function POST(req: Request) {
   const path = `${me.ownerEmail}/${Date.now()}-${file.name.replace(/[^\w.-]/g, '_')}`;
   await admin.storage.from('cvs').upload(path, buf, { contentType: file.type });
 
+  const slug = await generateUniqueSlug(data.name, me.ownerEmail);
+
   const { data: existing } = await admin.from('portfolios').select('id,slug').eq('owner_email', me.ownerEmail).maybeSingle();
   if (existing) {
-    await admin.from('portfolios').update({ data, cv_path: path, updated_at: new Date().toISOString() }).eq('id', existing.id);
-    revalidatePath(`/f/${existing.slug}`);
-    return NextResponse.json({ slug: existing.slug });
+    await admin.from('portfolios').update({ data, slug, cv_path: path, updated_at: new Date().toISOString() }).eq('id', existing.id);
+    if (existing.slug && existing.slug !== slug) {
+      revalidatePath(`/f/${existing.slug}`);
+    }
+    revalidatePath(`/f/${slug}`);
+    revalidatePath('/portal');
+    return NextResponse.json({ slug });
   }
 
-  const base = (data.name || me.ownerEmail.split('@')[0]).toLowerCase()
-    .replace(/^(dr|prof|mr|mrs|ms)\.?\s+/, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'faculty';
-  let slug = base;
-  for (let i = 2; ; i++) {
-    const { data: taken } = await admin.from('portfolios').select('id').eq('slug', slug).maybeSingle();
-    if (!taken) break;
-    slug = `${base}-${i}`;
-  }
   const { error } = await admin.from('portfolios').insert({ owner_email: me.ownerEmail, slug, data, cv_path: path });
   if (error) return fail('Could not save your portfolio. Try again.', 500);
+  revalidatePath(`/f/${slug}`);
+  revalidatePath('/portal');
   return NextResponse.json({ slug });
 }
