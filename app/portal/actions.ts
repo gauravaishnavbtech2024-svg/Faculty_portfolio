@@ -3,6 +3,7 @@ import { revalidatePath } from 'next/cache';
 import { currentOwner, supabaseServer, supabaseAdmin } from '@/lib/supabase';
 import { PortfolioData } from '@/lib/schema';
 import { generateUniqueSlug } from '@/lib/slug';
+import { normalizeUrl } from '@/lib/normalizeUrl';
 
 async function mine(patch: Record<string, unknown>) {
   const me = await currentOwner();
@@ -27,6 +28,13 @@ export async function saveData(raw: unknown) {
   const me = await currentOwner();
   if (!me) throw new Error('Not authorized');
   const data = PortfolioData.parse(raw);
+
+  if (data.links) {
+    for (const key of Object.keys(data.links) as (keyof typeof data.links)[]) {
+      const normalized = normalizeUrl(data.links[key], key);
+      data.links[key] = normalized || '';
+    }
+  }
 
   const admin = supabaseAdmin();
   const { data: existing } = await admin

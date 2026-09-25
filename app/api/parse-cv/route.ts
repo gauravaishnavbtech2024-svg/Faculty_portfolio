@@ -5,6 +5,7 @@ import { GoogleGenAI } from '@google/genai';
 import { currentOwner, supabaseAdmin } from '@/lib/supabase';
 import { PortfolioData } from '@/lib/schema';
 import { generateUniqueSlug } from '@/lib/slug';
+import { normalizeUrl } from '@/lib/normalizeUrl';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60;
@@ -67,7 +68,7 @@ Extraction guidelines:
 6. "bio": A well-written 2-4 sentence academic biography summarizing their background, research areas, and focus.
 7. "courses": List of courses taught (e.g., "Computer Security", "Relational Databases", "Internet of Things").
 8. "publications": Include title, co-authors/authors string, conference/journal name in venue, publication year, and DOI/URL link if present.
-9. "links": Search the CV for Google Scholar, LinkedIn, GitHub, ORCID, ResearchGate, DBLP, or personal homepage URLs.
+9. "links": Search the CV thoroughly for LinkedIn profiles/URLs/handles, Google Scholar, GitHub, ORCID, ResearchGate, DBLP, or personal homepages. Provide full URLs (e.g. https://www.linkedin.com/in/username).
 10. "contact": Extract email, phone number, room/office number, and university campus address.
 11. Leave missing items as empty strings or empty lists. Do not fabricate information.`;
 
@@ -128,6 +129,15 @@ export async function POST(req: Request) {
     console.error('[DEBUG PARSE CV ERROR]:', err);
     return fail('We could not read this CV. Try a text-based PDF or a DOCX file.', 422);
   }
+
+  // Normalize all social media and profile links
+  if (data.links) {
+    for (const key of Object.keys(data.links) as (keyof typeof data.links)[]) {
+      const normalized = normalizeUrl(data.links[key], key);
+      data.links[key] = normalized || '';
+    }
+  }
+
   data.visible = { email: true, phone: false, office: true, address: true }; // phone hidden by default
 
   const admin = supabaseAdmin();
