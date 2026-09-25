@@ -189,7 +189,7 @@ export default function ImageCropModal({ file, onCropComplete, onCancel }: Props
               step="0.05"
               value={zoom}
               onChange={(e) => setZoom(parseFloat(e.target.value))}
-              className="flex-1 accent-[#2547d0] cursor-pointer"
+              className="flex-1 accent-[#002147] cursor-pointer"
             />
             <button
               type="button"
@@ -213,7 +213,7 @@ export default function ImageCropModal({ file, onCropComplete, onCancel }: Props
           <button
             type="button"
             onClick={handleCrop}
-            className="flex-1 rounded-xl bg-[#2547d0] hover:bg-[#1e3bb8] py-2.5 text-xs font-bold text-white shadow-md transition-all duration-150 hover:scale-[1.02]"
+            className="flex-1 rounded-xl bg-[#002147] hover:bg-[#001633] py-2.5 text-xs font-bold text-white shadow-md transition-all duration-150 hover:scale-[1.02]"
           >
             Crop & Apply Photo
           </button>

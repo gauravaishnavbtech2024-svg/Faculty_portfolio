@@ -10,14 +10,14 @@ export default async function PortalLayout({ children }: { children: React.React
       <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-xl bg-[#2b4cdd] flex items-center justify-center text-white font-bold text-lg shadow-sm">
+            <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-[#002147] to-[#0a356c] border border-[#e31e34]/30 flex items-center justify-center text-white font-bold text-lg shadow-sm">
               FP
             </div>
             <div>
-              <a href="/portal" className="text-base font-bold text-slate-900 tracking-tight hover:text-[#2b4cdd] transition-colors">
+              <a href="/portal" className="text-base font-bold text-[#002147] tracking-tight hover:text-[#e31e34] transition-colors">
                 Faculty Portal
               </a>
-              <p className="text-xs text-slate-500">Academic CV & Portfolio Engine</p>
+              <p className="text-xs text-slate-500">The ICFAI University Academic Portfolio</p>
             </div>
           </div>
 

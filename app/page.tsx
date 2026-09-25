@@ -7,12 +7,12 @@ export default function Home() {
       <header className="border-b border-slate-200 bg-white/80 backdrop-blur-md">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-xl bg-[#2b4cdd] flex items-center justify-center text-white font-bold text-lg shadow-sm">
+            <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-[#002147] to-[#0a356c] border border-[#e31e34]/30 flex items-center justify-center text-white font-bold text-lg shadow-sm">
               FP
             </div>
             <div>
-              <span className="text-base font-bold text-slate-900 tracking-tight">Faculty Portfolio Designer</span>
-              <p className="text-xs text-slate-500">Academic CV & Portfolio Platform</p>
+              <span className="text-base font-bold text-[#002147] tracking-tight">Faculty Portfolio Designer</span>
+              <p className="text-xs text-slate-500">The ICFAI University, Jaipur</p>
             </div>
           </div>
           <div className="text-xs font-semibold text-slate-500">

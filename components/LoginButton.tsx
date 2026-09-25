@@ -20,7 +20,7 @@ export default function LoginButton() {
   return (
     <button
       onClick={login}
-      className="inline-flex items-center gap-3 rounded-2xl bg-[#2b4cdd] hover:bg-[#203db8] px-7 py-3.5 text-base font-bold text-white shadow-lg shadow-blue-500/25 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+      className="inline-flex items-center gap-3 rounded-2xl bg-[#002147] hover:bg-[#001633] px-7 py-3.5 text-base font-bold text-white shadow-lg shadow-slate-900/15 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
     >
       <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
         <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />

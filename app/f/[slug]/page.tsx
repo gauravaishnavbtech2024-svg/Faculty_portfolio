@@ -58,18 +58,18 @@ export default async function Portfolio({ params }: Props) {
         )}
 
         {/* Hero Architectural Campus Banner */}
-        <div className="relative h-60 sm:h-80 w-full overflow-hidden bg-slate-900 select-none">
+        <div className="relative h-60 sm:h-80 w-full overflow-hidden bg-[#001633] select-none">
           <img
             src="/icfai-building.jpg"
             alt="ICFAI University Main Building"
             className="w-full h-full object-cover object-center brightness-95"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/10" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#001633]/90 via-[#002147]/50 to-transparent" />
           <div className="absolute bottom-6 left-6 sm:left-10 text-white max-w-xl">
             <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight drop-shadow-md">
               {d.name || 'Faculty Portfolio'}
             </h2>
-            <p className="text-xs sm:text-sm text-slate-200 mt-1 font-medium drop-shadow-sm">
+            <p className="text-xs sm:text-sm text-blue-100 mt-1 font-medium drop-shadow-sm">
               {[d.designation, d.department, d.institution].filter(Boolean).join(' • ')}
             </p>
           </div>
@@ -105,9 +105,9 @@ export default async function Portfolio({ params }: Props) {
                   {d.courses.map((course, idx) => (
                     <div
                       key={idx}
-                      className="flex items-center gap-3.5 p-4 rounded-xl border border-slate-200 bg-slate-50/60 hover:bg-blue-50/40 hover:border-blue-300 transition-all duration-150 group"
+                      className="flex items-center gap-3.5 p-4 rounded-xl border border-slate-200 bg-slate-50/60 hover:bg-[#eff4fa] hover:border-[#bad0ed] transition-all duration-150 group"
                     >
-                      <div className="w-9 h-9 rounded-lg bg-[#2547d0] text-white flex items-center justify-center shrink-0 shadow-sm group-hover:scale-105 transition-transform">
+                      <div className="w-9 h-9 rounded-lg bg-[#002147] text-white flex items-center justify-center shrink-0 shadow-sm group-hover:scale-105 group-hover:bg-[#e31e34] transition-all">
                         <svg className="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
                           <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z" />
                           <path d="M6 6h10" />
@@ -142,13 +142,13 @@ export default async function Portfolio({ params }: Props) {
                 {Array.isArray(d.research_interests) && d.research_interests.length > 0 && (
                   <div>
                     <h3 className="text-base font-bold text-slate-800 mb-4 flex items-center gap-2">
-                      <span className="w-2.5 h-2.5 rounded-full bg-[#2547d0]" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#e31e34]" />
                       Research Interests
                     </h3>
                     <ul className="space-y-2.5 pl-1">
                       {d.research_interests.map((r, i) => (
                         <li key={i} className="flex items-start gap-2.5 text-sm text-slate-700">
-                          <span className="text-[#2547d0] font-bold mt-0.5">•</span>
+                          <span className="text-[#e31e34] font-bold mt-0.5">•</span>
                           <span>{r}</span>
                         </li>
                       ))}
@@ -160,16 +160,16 @@ export default async function Portfolio({ params }: Props) {
                 {Array.isArray(d.projects) && d.projects.length > 0 && (
                   <div>
                     <h3 className="text-base font-bold text-slate-800 mb-4 flex items-center gap-2">
-                      <span className="w-2.5 h-2.5 rounded-full bg-[#2547d0]" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#002147]" />
                       Projects
                     </h3>
                     <div className="space-y-3.5">
                       {d.projects.map((p, i) => (
-                        <div key={i} className="p-4 rounded-xl border border-slate-200 bg-slate-50/70 hover:border-slate-300 transition-colors">
+                        <div key={i} className="p-4 rounded-xl border border-slate-200 bg-slate-50/70 hover:border-[#002147]/40 transition-colors">
                           <div className="flex items-baseline justify-between gap-2">
                             <h4 className="font-semibold text-slate-900 text-sm">
                               {safe(p.link) ? (
-                                <a href={p.link} target="_blank" rel="noopener noreferrer" className="text-[#2547d0] hover:underline">
+                                <a href={p.link} target="_blank" rel="noopener noreferrer" className="text-[#002147] hover:text-[#e31e34] hover:underline">
                                   {p.title}
                                 </a>
                               ) : (
@@ -200,17 +200,17 @@ export default async function Portfolio({ params }: Props) {
                 {Array.isArray(d.experience) && d.experience.length > 0 && (
                   <div>
                     <h3 className="text-base font-bold text-slate-800 mb-4">Academic & Professional Experience</h3>
-                    <div className="relative pl-6 border-l-2 border-blue-200 space-y-6">
+                    <div className="relative pl-6 border-l-2 border-[#bad0ed] space-y-6">
                       {d.experience.map((e, i) => (
                         <div key={i} className="relative">
-                          <div className="absolute -left-[31px] top-1.5 w-3.5 h-3.5 rounded-full bg-[#2547d0] border-2 border-white shadow-sm" />
+                          <div className="absolute -left-[31px] top-1.5 w-3.5 h-3.5 rounded-full bg-[#002147] border-2 border-white shadow-sm" />
                           <div className="flex flex-wrap items-baseline justify-between gap-2">
                             <p className="font-bold text-slate-900 text-base">{e.role}</p>
-                            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-blue-50 text-[#2547d0] border border-blue-200">
+                            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-[#eff4fa] text-[#002147] border border-[#dbe6f5]">
                               {[e.start, e.end].filter(Boolean).join(' – ') || 'Present'}
                             </span>
                           </div>
-                          <p className="text-sm font-medium text-[#2547d0] mt-0.5">{e.organization}</p>
+                          <p className="text-sm font-medium text-[#002147] mt-0.5">{e.organization}</p>
                           {e.description && <p className="text-sm text-slate-600 mt-2 leading-relaxed">{e.description}</p>}
                         </div>
                       ))}
@@ -225,7 +225,7 @@ export default async function Portfolio({ params }: Props) {
                     <div className="relative pl-6 border-l-2 border-slate-200 space-y-6">
                       {d.education.map((e, i) => (
                         <div key={i} className="relative">
-                          <div className="absolute -left-[31px] top-1.5 w-3.5 h-3.5 rounded-full bg-slate-400 border-2 border-white shadow-sm" />
+                          <div className="absolute -left-[31px] top-1.5 w-3.5 h-3.5 rounded-full bg-[#e31e34] border-2 border-white shadow-sm" />
                           <div className="flex flex-wrap items-baseline justify-between gap-2">
                             <p className="font-bold text-slate-900 text-base">{e.degree}</p>
                             {e.year && <span className="text-xs text-slate-500 font-semibold">{e.year}</span>}
@@ -254,13 +254,13 @@ export default async function Portfolio({ params }: Props) {
                 {d.publications.map((p, i) => (
                   <div
                     key={i}
-                    className="p-5 rounded-xl border border-slate-200 bg-white hover:shadow-md hover:border-blue-300 transition-all duration-150"
+                    className="p-5 rounded-xl border border-slate-200 bg-white hover:shadow-md hover:border-[#002147]/40 transition-all duration-150"
                   >
                     <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                       <div className="flex-1">
                         <h3 className="font-semibold text-slate-900 text-base leading-snug">
                           {safe(p.link) ? (
-                            <a href={p.link} target="_blank" rel="noopener noreferrer" className="text-[#2547d0] hover:underline">
+                            <a href={p.link} target="_blank" rel="noopener noreferrer" className="text-[#002147] hover:text-[#e31e34] hover:underline">
                               {p.title}
                             </a>
                           ) : (
@@ -283,7 +283,7 @@ export default async function Portfolio({ params }: Props) {
                           href={p.link}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="self-start shrink-0 px-3 py-1.5 rounded-lg bg-blue-50 text-[#2547d0] hover:bg-[#2547d0] hover:text-white text-xs font-semibold border border-blue-200 transition-colors"
+                          className="self-start shrink-0 px-3 py-1.5 rounded-lg bg-[#eff4fa] text-[#002147] hover:bg-[#002147] hover:text-white text-xs font-semibold border border-[#dbe6f5] transition-colors"
                         >
                           View Paper &rarr;
                         </a>
@@ -322,7 +322,7 @@ export default async function Portfolio({ params }: Props) {
           {/* Section: Contact & Location */}
           <section id="contact" className="scroll-mt-6 pt-4 border-t border-slate-200">
             <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2.5 tracking-tight">
-              <svg className="w-6 h-6 text-[#2547d0] fill-none stroke-current stroke-2" viewBox="0 0 24 24">
+              <svg className="w-6 h-6 text-[#002147] fill-none stroke-current stroke-2" viewBox="0 0 24 24">
                 <rect width="20" height="16" x="2" y="4" rx="2" />
                 <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
               </svg>
@@ -353,7 +353,7 @@ export default async function Portfolio({ params }: Props) {
                       href={`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(d.contact.email)}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-sm font-semibold text-[#2547d0] hover:underline mt-1 block"
+                      className="text-sm font-semibold text-[#002147] hover:text-[#e31e34] hover:underline mt-1 block"
                     >
                       {d.contact.email}
                     </a>

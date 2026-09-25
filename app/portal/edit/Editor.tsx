@@ -147,7 +147,7 @@ export default function Editor({ initial }: { initial: PortfolioData }) {
         <div className="flex flex-col sm:flex-row items-center gap-6">
           {/* Avatar Preview */}
           <div className="relative shrink-0">
-            <div className="w-28 h-28 rounded-full border-4 border-[#2547d0]/20 bg-slate-100 shadow-md overflow-hidden flex items-center justify-center">
+            <div className="w-28 h-28 rounded-full border-4 border-[#002147]/20 bg-slate-100 shadow-md overflow-hidden flex items-center justify-center">
               {d.photo_url && !previewError ? (
                 <img
                   src={d.photo_url}
@@ -156,7 +156,7 @@ export default function Editor({ initial }: { initial: PortfolioData }) {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="w-full h-full bg-gradient-to-br from-blue-700 to-indigo-900 flex items-center justify-center text-3xl font-extrabold text-white">
+                <div className="w-full h-full bg-gradient-to-br from-[#002147] to-[#0a356c] flex items-center justify-center text-3xl font-extrabold text-white">
                   {initialLetter}
                 </div>
               )}
@@ -194,7 +194,7 @@ export default function Editor({ initial }: { initial: PortfolioData }) {
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={uploadingPhoto}
-                className="inline-flex items-center gap-2 rounded-xl bg-[#2547d0] hover:bg-[#1e3bb8] px-4 py-2.5 text-xs font-bold text-white shadow-sm transition-all duration-150"
+                className="inline-flex items-center gap-2 rounded-xl bg-[#002147] hover:bg-[#001633] px-4 py-2.5 text-xs font-bold text-white shadow-sm transition-all duration-150"
               >
                 <svg className="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
                   <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
@@ -246,7 +246,7 @@ export default function Editor({ initial }: { initial: PortfolioData }) {
             <h2 className="text-lg font-bold capitalize text-slate-900">{sec}</h2>
             <button
               type="button"
-              className="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg bg-blue-50 text-[#2547d0] hover:bg-blue-100 transition-colors"
+              className="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg bg-[#eff4fa] text-[#002147] hover:bg-[#dbe6f5] transition-colors"
               onClick={() => upd((c) => { (c[sec] = c[sec] || []).push(Object.fromEntries(fields.map((f) => [f, '']))); })}
             >
               <span>+</span>
@@ -327,7 +327,7 @@ export default function Editor({ initial }: { initial: PortfolioData }) {
                   type="checkbox"
                   checked={d.visible[k] ?? true}
                   onChange={(e) => upd((c) => { c.visible[k] = e.target.checked; })}
-                  className="rounded border-slate-300 text-[#2547d0] focus:ring-[#2547d0]"
+                  className="rounded border-slate-300 text-[#002147] focus:ring-[#002147]"
                 />
                 <span>Show on public page</span>
               </label>
@@ -343,7 +343,7 @@ export default function Editor({ initial }: { initial: PortfolioData }) {
             <button
               onClick={save}
               disabled={pending}
-              className="inline-flex items-center gap-2 rounded-xl bg-[#2547d0] hover:bg-[#1e3bb8] px-6 py-2.5 text-sm font-bold text-white shadow-md transition-all duration-150 disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-xl bg-[#002147] hover:bg-[#001633] px-6 py-2.5 text-sm font-bold text-white shadow-md transition-all duration-150 disabled:opacity-50"
             >
               {pending ? (
                 <>

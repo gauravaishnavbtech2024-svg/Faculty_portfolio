@@ -152,7 +152,7 @@ export default function PortfolioSidebar({ data }: Props) {
               target="_blank"
               rel="noopener noreferrer"
               title={`${p.name} (Click to open)`}
-              className="w-8 h-8 rounded-full bg-white/15 hover:bg-white text-white hover:text-[#2547d0] flex items-center justify-center transition-all duration-150 shadow-sm cursor-pointer hover:scale-110"
+              className="w-8 h-8 rounded-full bg-white/10 hover:bg-[#e31e34] text-white flex items-center justify-center transition-all duration-150 shadow-sm cursor-pointer hover:scale-110"
             >
               {p.icon}
             </a>
@@ -174,9 +174,9 @@ export default function PortfolioSidebar({ data }: Props) {
   return (
     <>
       {/* Mobile Top Header */}
-      <div className="lg:hidden w-full bg-[#2547d0] text-white p-4 sticky top-0 z-40 flex items-center justify-between shadow-md">
+      <div className="lg:hidden w-full bg-[#002147] text-white p-4 sticky top-0 z-40 flex items-center justify-between shadow-md border-b-2 border-[#e31e34]">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full border-2 border-white/80 bg-blue-900 flex items-center justify-center font-bold text-sm overflow-hidden shrink-0">
+          <div className="w-10 h-10 rounded-full border-2 border-white/80 bg-[#001633] flex items-center justify-center font-bold text-sm overflow-hidden shrink-0">
             {data.photo_url && !imgError ? (
               <img
                 src={data.photo_url}
@@ -211,7 +211,7 @@ export default function PortfolioSidebar({ data }: Props) {
 
       {/* Mobile Dropdown Nav Menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden w-full bg-[#1e3bb8] text-white py-3 px-4 border-b border-blue-400/30 sticky top-16 z-30 shadow-xl animate-in slide-in-from-top-2 duration-150">
+        <div className="lg:hidden w-full bg-[#001633] text-white py-3 px-4 border-b border-[#e31e34] sticky top-16 z-30 shadow-xl animate-in slide-in-from-top-2 duration-150">
           <ul className="space-y-1 mb-4">
             {navItems.map((item) => (
               <li key={item.id}>
@@ -219,7 +219,7 @@ export default function PortfolioSidebar({ data }: Props) {
                   type="button"
                   onClick={() => scrollTo(item.id)}
                   className={`w-full text-left px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors ${
-                    activeSection === item.id ? 'bg-white/20 text-white font-bold' : 'text-blue-100 hover:bg-white/10'
+                    activeSection === item.id ? 'bg-[#e31e34] text-white font-bold' : 'text-slate-200 hover:bg-white/10'
                   }`}
                 >
                   {item.label}
@@ -234,12 +234,12 @@ export default function PortfolioSidebar({ data }: Props) {
       )}
 
       {/* Desktop Sticky Sidebar */}
-      <aside className="hidden lg:flex w-80 shrink-0 bg-[#2547d0] text-white shadow-2xl lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto flex-col justify-between custom-scrollbar z-30 select-none">
+      <aside className="hidden lg:flex w-80 shrink-0 bg-[#002147] text-white shadow-2xl lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto flex-col justify-between custom-scrollbar z-30 select-none border-r border-[#001633]">
         {/* Top Profile Card */}
         <div className="p-8 text-center flex flex-col items-center">
           {/* Avatar Frame */}
           <div className="relative mb-5">
-            <div className="w-32 h-32 rounded-full border-4 border-white/90 shadow-xl bg-blue-900 overflow-hidden flex items-center justify-center">
+            <div className="w-32 h-32 rounded-full border-4 border-white/90 shadow-xl bg-[#001633] overflow-hidden flex items-center justify-center">
               {data.photo_url && !imgError ? (
                 <img
                   src={data.photo_url}
@@ -248,7 +248,7 @@ export default function PortfolioSidebar({ data }: Props) {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="w-full h-full bg-gradient-to-br from-blue-700 to-indigo-900 flex items-center justify-center text-4xl font-extrabold text-white tracking-wider">
+                <div className="w-full h-full bg-gradient-to-br from-[#002147] to-[#0a356c] flex items-center justify-center text-4xl font-extrabold text-white tracking-wider">
                   {initialLetter}
                 </div>
               )}
@@ -273,7 +273,7 @@ export default function PortfolioSidebar({ data }: Props) {
           )}
 
           {data.institution && (
-            <p className="text-xs font-semibold text-blue-100 mt-1">
+            <p className="text-xs font-semibold text-white/90 mt-1">
               @ {data.institution}
             </p>
           )}
@@ -297,13 +297,13 @@ export default function PortfolioSidebar({ data }: Props) {
                     onClick={() => scrollTo(item.id)}
                     className={`w-full text-left px-8 py-3 text-sm font-semibold tracking-wide transition-all duration-150 flex items-center justify-between ${
                       isActive
-                        ? 'bg-white/20 text-white font-bold pl-9 border-r-4 border-white'
-                        : 'text-blue-100 hover:bg-white/10 hover:text-white'
+                        ? 'bg-white/15 text-white font-bold pl-9 border-r-4 border-[#e31e34]'
+                        : 'text-slate-200 hover:bg-white/10 hover:text-white'
                     }`}
                   >
                     <span>{item.label}</span>
                     {isActive && (
-                      <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+                      <span className="w-2 h-2 rounded-full bg-[#e31e34] animate-pulse" />
                     )}
                   </button>
                 </li>
@@ -313,7 +313,7 @@ export default function PortfolioSidebar({ data }: Props) {
         </nav>
 
         {/* Social / Academic Icons Bar */}
-        <div className="p-5 border-t border-white/15 bg-[#1e3bb8] shrink-0">
+        <div className="p-5 border-t border-white/15 bg-[#001633] shrink-0">
           {renderSocialIcons()}
         </div>
       </aside>

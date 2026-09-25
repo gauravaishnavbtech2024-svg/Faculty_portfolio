@@ -20,7 +20,7 @@ export default async function Dashboard() {
   if (!p) {
     return (
       <div className="rounded-3xl border border-slate-200 bg-white p-10 text-center shadow-sm max-w-xl mx-auto">
-        <div className="w-16 h-16 rounded-2xl bg-blue-50 text-[#2547d0] flex items-center justify-center mx-auto mb-5 shadow-inner">
+        <div className="w-16 h-16 rounded-2xl bg-[#eff4fa] text-[#002147] flex items-center justify-center mx-auto mb-5 shadow-inner">
           <svg className="w-8 h-8 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
             <polyline points="14 2 14 8 20 8" />
@@ -35,7 +35,7 @@ export default async function Dashboard() {
         </p>
         <Link
           href="/portal/upload"
-          className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#2547d0] hover:bg-[#1e3bb8] px-6 py-3 text-sm font-bold text-white shadow-md transition-all duration-150 hover:scale-[1.02]"
+          className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#002147] hover:bg-[#001633] px-6 py-3 text-sm font-bold text-white shadow-md transition-all duration-150 hover:scale-[1.02]"
         >
           <svg className="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" />
@@ -81,7 +81,7 @@ export default async function Dashboard() {
         <div className="flex items-center gap-3">
           <Link
             href="/portal/edit"
-            className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:border-slate-400 transition-colors shadow-sm"
+            className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:border-[#002147] transition-colors shadow-sm"
           >
             <svg className="w-4 h-4 text-slate-500 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
               <path d="M12 20h9" />
@@ -91,7 +91,7 @@ export default async function Dashboard() {
           </Link>
           <Link
             href="/portal/upload"
-            className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:border-slate-400 transition-colors shadow-sm"
+            className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:border-[#002147] transition-colors shadow-sm"
           >
             <svg className="w-4 h-4 text-slate-500 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" />
@@ -109,10 +109,10 @@ export default async function Dashboard() {
               className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1 text-xs font-bold ${
                 live
                   ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                  : 'bg-amber-50 text-amber-800 border border-amber-200'
+                  : 'bg-[#fde8ea] text-[#c8102e] border border-[#fbd0d5]'
               }`}
             >
-              <span className={`w-2 h-2 rounded-full ${live ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+              <span className={`w-2 h-2 rounded-full ${live ? 'bg-emerald-500' : 'bg-[#e31e34]'}`} />
               {live ? 'Live & Published' : 'Private Draft Mode'}
             </span>
             {p.updated_at && (
@@ -126,8 +126,8 @@ export default async function Dashboard() {
             <button
               className={`inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold shadow-sm transition-all duration-150 ${
                 live
-                  ? 'bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-300'
-                  : 'bg-[#2547d0] text-white hover:bg-[#1e3bb8]'
+                  ? 'bg-[#fde8ea] text-[#c8102e] hover:bg-[#fbd0d5] border border-[#fbd0d5]'
+                  : 'bg-[#002147] text-white hover:bg-[#001633]'
               }`}
             >
               {live ? (
@@ -166,7 +166,7 @@ export default async function Dashboard() {
               <Link
                 href={`/f/${currentSlug}`}
                 target="_blank"
-                className="inline-flex items-center gap-1.5 rounded-lg bg-white border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-[#2547d0] transition-colors shadow-sm"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-white border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-[#002147] transition-colors shadow-sm"
               >
                 <span>Open Site</span>
                 <svg className="w-3.5 h-3.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
@@ -179,28 +179,28 @@ export default async function Dashboard() {
           </div>
         ) : (
           /* When DRAFT: Show Draft Preview & Guidance, NO Copy Link */
-          <div className="rounded-2xl bg-amber-50/70 border border-amber-200/80 p-5 space-y-4">
+          <div className="rounded-2xl bg-[#fde8ea]/60 border border-[#fbd0d5] p-5 space-y-4">
             <div className="flex items-start gap-3">
-              <div className="w-9 h-9 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center shrink-0 mt-0.5">
+              <div className="w-9 h-9 rounded-xl bg-[#fde8ea] text-[#c8102e] flex items-center justify-center shrink-0 mt-0.5">
                 <svg className="w-5 h-5 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
                   <circle cx="12" cy="12" r="10" />
                   <line x1="12" y1="16" x2="12" y2="12" />
                   <line x1="12" y1="8" x2="12.01" y2="8" />
                 </svg>
               </div>
-              <div className="space-y-1 text-xs sm:text-sm text-amber-950">
-                <p className="font-bold text-amber-900">Your portfolio is in Private Draft Mode</p>
-                <p className="leading-relaxed text-amber-800">
+              <div className="space-y-1 text-xs sm:text-sm text-[#5c0b13]">
+                <p className="font-bold text-[#c8102e]">Your portfolio is in Private Draft Mode</p>
+                <p className="leading-relaxed text-[#7a121d]">
                   Only you can view this page while signed in. Review your details, make any needed edits, and click <strong>&quot;Publish to World&quot;</strong> above to generate your public link and make it live for students, colleagues, and visitors.
                 </p>
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-amber-200/60">
+            <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-[#fbd0d5]/80">
               <Link
                 href={`/f/${currentSlug}`}
                 target="_blank"
-                className="inline-flex items-center gap-2 rounded-xl bg-white border border-amber-300 px-4 py-2 text-xs font-bold text-amber-900 hover:bg-amber-100/50 transition-colors shadow-sm"
+                className="inline-flex items-center gap-2 rounded-xl bg-white border border-[#fbd0d5] px-4 py-2 text-xs font-bold text-[#c8102e] hover:bg-[#fde8ea] transition-colors shadow-sm"
               >
                 <span>Preview Draft</span>
                 <svg className="w-3.5 h-3.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
@@ -211,7 +211,7 @@ export default async function Dashboard() {
               </Link>
               <Link
                 href="/portal/edit"
-                className="inline-flex items-center gap-2 rounded-xl bg-white border border-amber-300 px-4 py-2 text-xs font-bold text-amber-900 hover:bg-amber-100/50 transition-colors shadow-sm"
+                className="inline-flex items-center gap-2 rounded-xl bg-white border border-[#fbd0d5] px-4 py-2 text-xs font-bold text-[#c8102e] hover:bg-[#fde8ea] transition-colors shadow-sm"
               >
                 <svg className="w-3.5 h-3.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
                   <path d="M12 20h9" />
@@ -227,19 +227,19 @@ export default async function Dashboard() {
       {/* Summary Stat Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm text-center">
-          <p className="text-2xl font-extrabold text-[#2547d0]">{Array.isArray(p.data.publications) ? p.data.publications.length : 0}</p>
+          <p className="text-2xl font-extrabold text-[#002147]">{Array.isArray(p.data.publications) ? p.data.publications.length : 0}</p>
           <p className="text-xs font-bold text-slate-500 mt-1 uppercase tracking-wider">Publications</p>
         </div>
         <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm text-center">
-          <p className="text-2xl font-extrabold text-[#2547d0]">{Array.isArray(p.data.projects) ? p.data.projects.length : 0}</p>
+          <p className="text-2xl font-extrabold text-[#002147]">{Array.isArray(p.data.projects) ? p.data.projects.length : 0}</p>
           <p className="text-xs font-bold text-slate-500 mt-1 uppercase tracking-wider">Projects</p>
         </div>
         <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm text-center">
-          <p className="text-2xl font-extrabold text-[#2547d0]">{Array.isArray(p.data.courses) ? p.data.courses.length : 0}</p>
+          <p className="text-2xl font-extrabold text-[#002147]">{Array.isArray(p.data.courses) ? p.data.courses.length : 0}</p>
           <p className="text-xs font-bold text-slate-500 mt-1 uppercase tracking-wider">Courses</p>
         </div>
         <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm text-center">
-          <p className="text-2xl font-extrabold text-[#2547d0]">{Array.isArray(p.data.awards) ? p.data.awards.length : 0}</p>
+          <p className="text-2xl font-extrabold text-[#002147]">{Array.isArray(p.data.awards) ? p.data.awards.length : 0}</p>
           <p className="text-xs font-bold text-slate-500 mt-1 uppercase tracking-wider">Awards</p>
         </div>
       </div>

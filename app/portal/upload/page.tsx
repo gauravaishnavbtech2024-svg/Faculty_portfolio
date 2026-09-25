@@ -53,8 +53,8 @@ export default function Upload() {
           </p>
         </div>
 
-        <div className="rounded-2xl bg-amber-50/80 border border-amber-200 p-4 text-xs text-amber-900 text-left flex items-start gap-2.5">
-          <svg className="w-4 h-4 text-amber-700 shrink-0 mt-0.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
+        <div className="rounded-2xl bg-[#fde8ea]/70 border border-[#fbd0d5] p-4 text-xs text-[#5c0b13] text-left flex items-start gap-2.5">
+          <svg className="w-4 h-4 text-[#c8102e] shrink-0 mt-0.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
             <circle cx="12" cy="12" r="10" />
             <line x1="12" y1="16" x2="12" y2="12" />
             <line x1="12" y1="8" x2="12.01" y2="8" />
@@ -68,7 +68,7 @@ export default function Upload() {
           <Link
             href={`/f/${slug}`}
             target="_blank"
-            className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm"
+            className="inline-flex items-center gap-2 rounded-xl border border-[#fbd0d5] bg-white px-5 py-2.5 text-sm font-semibold text-[#c8102e] hover:bg-[#fde8ea] transition-colors shadow-sm"
           >
             <span>Preview Draft</span>
             <svg className="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
@@ -79,7 +79,7 @@ export default function Upload() {
           </Link>
           <Link
             href="/portal"
-            className="inline-flex items-center gap-2 rounded-xl bg-[#2547d0] hover:bg-[#1e3bb8] px-6 py-2.5 text-sm font-bold text-white shadow-md transition-all"
+            className="inline-flex items-center gap-2 rounded-xl bg-[#002147] hover:bg-[#001633] px-6 py-2.5 text-sm font-bold text-white shadow-md transition-all"
           >
             <span>Go to Dashboard</span>
             <svg className="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
@@ -111,14 +111,14 @@ export default function Upload() {
         }}
         className={`relative rounded-3xl border-2 border-dashed p-10 text-center transition-all ${
           dragActive
-            ? 'border-blue-600 bg-blue-50/50'
+            ? 'border-[#002147] bg-[#eff4fa]'
             : file
             ? 'border-emerald-400 bg-emerald-50/30'
-            : 'border-slate-300 bg-white hover:border-slate-400 hover:bg-slate-50/50'
+            : 'border-slate-300 bg-white hover:border-[#002147] hover:bg-[#eff4fa]/30'
         }`}
       >
         <div className="flex flex-col items-center justify-center space-y-4">
-          <div className="w-16 h-16 rounded-2xl bg-blue-50 text-[#2547d0] flex items-center justify-center shadow-inner">
+          <div className="w-16 h-16 rounded-2xl bg-[#eff4fa] text-[#002147] flex items-center justify-center shadow-inner">
             {file ? (
               <svg className="w-8 h-8 text-emerald-600 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
@@ -128,7 +128,7 @@ export default function Upload() {
                 <polyline points="10 9 9 9 8 9" />
               </svg>
             ) : (
-              <svg className="w-8 h-8 text-[#2547d0] fill-none stroke-current stroke-2" viewBox="0 0 24 24">
+              <svg className="w-8 h-8 text-[#002147] fill-none stroke-current stroke-2" viewBox="0 0 24 24">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" />
               </svg>
             )}
@@ -143,7 +143,7 @@ export default function Upload() {
             ) : (
               <div>
                 <p className="font-semibold text-slate-800 text-base">
-                  Drag and drop your CV here, or <span className="text-[#2547d0] underline cursor-pointer">browse file</span>
+                  Drag and drop your CV here, or <span className="text-[#002147] underline cursor-pointer font-bold">browse file</span>
                 </p>
                 <p className="text-xs text-slate-500 mt-1">Accepts PDF or DOCX (Max 4 MB)</p>
               </div>
@@ -176,7 +176,7 @@ export default function Upload() {
         <button
           disabled={!file || busy}
           onClick={go}
-          className="rounded-2xl bg-[#2547d0] hover:bg-[#1e3bb8] px-8 py-3.5 text-base font-bold text-white shadow-lg transition-all duration-150 hover:scale-[1.02] disabled:opacity-50 disabled:scale-100 flex items-center gap-3"
+          className="rounded-2xl bg-[#002147] hover:bg-[#001633] px-8 py-3.5 text-base font-bold text-white shadow-lg transition-all duration-150 hover:scale-[1.02] disabled:opacity-50 disabled:scale-100 flex items-center gap-3"
         >
           {busy ? (
             <>
