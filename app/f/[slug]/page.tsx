@@ -1,19 +1,20 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { supabaseServer } from '@/lib/supabase';
+import { supabaseAdmin, currentOwner } from '@/lib/supabase';
 import type { PortfolioData } from '@/lib/schema';
 import PortfolioSidebar from '@/components/PortfolioSidebar';
 
 type Props = { params: Promise<{ slug: string }> };
 
 async function getRow(slug: string) {
-  const sb = await supabaseServer();
-  const { data } = await sb.from('portfolios').select('status,data').eq('slug', slug).maybeSingle();
-  return data as { status: string; data: PortfolioData } | null;
+  const admin = supabaseAdmin();
+  const { data } = await admin.from('portfolios').select('owner_email,status,data').eq('slug', slug).maybeSingle();
+  return data as { owner_email: string; status: string; data: PortfolioData } | null;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const row = await getRow((await params).slug);
+  const { slug } = await params;
+  const row = await getRow(slug);
   return {
     title: row?.data.name ? `${row.data.name} | Faculty Portfolio` : 'Faculty Portfolio',
     robots: row?.status === 'published' ? undefined : { index: false },
@@ -23,8 +24,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 const safe = (u?: string) => (u && /^https?:\/\//i.test(u) ? u : undefined);
 
 export default async function Portfolio({ params }: Props) {
-  const row = await getRow((await params).slug);
+  const { slug } = await params;
+  const row = await getRow(slug);
   if (!row) notFound();
+
+  // If in draft mode, only allow the owner to preview
+  if (row.status === 'draft') {
+    const me = await currentOwner();
+    if (!me || me.ownerEmail !== row.owner_email) {
+      notFound();
+    }
+  }
+
   const d = row.data;
 
   return (

@@ -47,7 +47,13 @@ export default async function Dashboard() {
   }
 
   const h = await headers();
-  const origin = process.env.NEXT_PUBLIC_SITE_URL ?? `${h.get('x-forwarded-proto') ?? 'http'}://${h.get('host')}`;
+  const host = h.get('x-forwarded-host') || h.get('host') || 'localhost:3000';
+  const proto = h.get('x-forwarded-proto') || (host.includes('localhost') ? 'http' : 'https');
+  const origin = host.includes('localhost')
+    ? `http://${host}`
+    : (process.env.NEXT_PUBLIC_SITE_URL && !process.env.NEXT_PUBLIC_SITE_URL.includes('localhost')
+        ? process.env.NEXT_PUBLIC_SITE_URL.replace(/\/+$/, '')
+        : `${proto}://${host}`);
   
   let currentSlug = p.slug;
   if (p.data?.name) {
