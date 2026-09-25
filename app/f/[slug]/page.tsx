@@ -58,13 +58,13 @@ export default async function Portfolio({ params }: Props) {
         )}
 
         {/* Hero Architectural Campus Banner */}
-        <div className="relative h-60 sm:h-80 w-full overflow-hidden bg-slate-800 select-none">
+        <div className="relative h-60 sm:h-80 w-full overflow-hidden bg-slate-900 select-none">
           <img
-            src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1600&q=80"
-            alt="Campus Architecture"
-            className="w-full h-full object-cover opacity-90"
+            src="/icfai-building.jpg"
+            alt="ICFAI University Main Building"
+            className="w-full h-full object-cover object-center brightness-95"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/10" />
           <div className="absolute bottom-6 left-6 sm:left-10 text-white max-w-xl">
             <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight drop-shadow-md">
               {d.name || 'Faculty Portfolio'}
