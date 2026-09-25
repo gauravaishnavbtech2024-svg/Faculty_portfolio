@@ -45,8 +45,10 @@ export default function Home() {
       </div>
 
       {/* Footer */}
-      <footer className="border-t border-slate-200 bg-white py-6 text-center text-xs text-slate-400">
-        <p>© {new Date().getFullYear()} Faculty Portfolio Portal. All rights reserved.</p>
+      <footer className="border-t border-slate-200 bg-white py-6 text-center text-xs text-slate-500">
+        <p className="font-medium text-slate-600">
+          Developed by <span className="font-bold text-[#002147]">Gaurav Vaishnav</span> &amp; <span className="font-bold text-[#002147]">Krish Charan</span>
+        </p>
       </footer>
     </main>
   );

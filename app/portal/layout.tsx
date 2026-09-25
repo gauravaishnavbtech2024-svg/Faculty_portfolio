@@ -34,9 +34,15 @@ export default async function PortalLayout({ children }: { children: React.React
         </div>
       </header>
 
-      <main className="mx-auto max-w-5xl px-6 py-10">
+      <main className="mx-auto max-w-5xl px-6 py-10 flex-1">
         {children}
       </main>
+
+      <footer className="border-t border-slate-200 bg-white py-6 text-center text-xs text-slate-500">
+        <p className="font-medium text-slate-600">
+          Developed by <span className="font-bold text-[#002147]">Gaurav Vaishnav</span> &amp; <span className="font-bold text-[#002147]">Krish Charan</span>
+        </p>
+      </footer>
     </div>
   );
 }
