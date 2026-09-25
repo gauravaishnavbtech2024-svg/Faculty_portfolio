@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import CopyButton from '@/components/CopyButton';
 
 const MAX = 4 * 1024 * 1024;
 
@@ -40,7 +39,6 @@ export default function Upload() {
   };
 
   if (slug) {
-    const url = `${typeof location !== 'undefined' ? location.origin : ''}/f/${slug}`;
     return (
       <div className="rounded-3xl border border-slate-200 bg-white p-8 sm:p-10 shadow-sm max-w-xl mx-auto text-center space-y-6">
         <div className="w-16 h-16 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto shadow-inner">
@@ -51,22 +49,28 @@ export default function Upload() {
         <div>
           <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Your Portfolio is Ready!</h1>
           <p className="mt-2 text-sm text-slate-600 leading-relaxed">
-            We extracted your academic achievements and built your personal page. It is saved in <strong>Draft Mode</strong> so you can review it before publishing.
+            We extracted your academic achievements and built your personal page. It is saved in <strong>Private Draft Mode</strong> so you can review and edit your information before publishing it live.
           </p>
         </div>
 
-        <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-left">
-          <p className="text-xs font-mono font-semibold text-slate-800 truncate flex-1">{url}</p>
-          <CopyButton text={url} />
+        <div className="rounded-2xl bg-amber-50/80 border border-amber-200 p-4 text-xs text-amber-900 text-left flex items-start gap-2.5">
+          <svg className="w-4 h-4 text-amber-700 shrink-0 mt-0.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="16" x2="12" y2="12" />
+            <line x1="12" y1="8" x2="12.01" y2="8" />
+          </svg>
+          <div>
+            <strong>Next Step:</strong> Review your draft preview or customize details. Once you are ready, click <strong>&quot;Publish to World&quot;</strong> in your dashboard to generate your public shareable link.
+          </div>
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
           <Link
             href={`/f/${slug}`}
             target="_blank"
-            className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm"
+            className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm"
           >
-            <span>Preview Page</span>
+            <span>Preview Draft</span>
             <svg className="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
               <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
               <polyline points="15 3 21 3 21 9" />
@@ -75,7 +79,7 @@ export default function Upload() {
           </Link>
           <Link
             href="/portal"
-            className="inline-flex items-center gap-1.5 rounded-xl bg-[#2547d0] hover:bg-[#1e3bb8] px-6 py-2.5 text-sm font-bold text-white shadow-md transition-all"
+            className="inline-flex items-center gap-2 rounded-xl bg-[#2547d0] hover:bg-[#1e3bb8] px-6 py-2.5 text-sm font-bold text-white shadow-md transition-all"
           >
             <span>Go to Dashboard</span>
             <svg className="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
@@ -125,9 +129,7 @@ export default function Upload() {
               </svg>
             ) : (
               <svg className="w-8 h-8 text-[#2547d0] fill-none stroke-current stroke-2" viewBox="0 0 24 24">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <polyline points="17 8 12 3 7 8" />
-                <line x1="12" y1="3" x2="12" y2="15" />
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" />
               </svg>
             )}
           </div>

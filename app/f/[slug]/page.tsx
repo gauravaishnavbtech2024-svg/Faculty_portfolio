@@ -41,7 +41,7 @@ export default async function Portfolio({ params }: Props) {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col lg:flex-row-reverse justify-between items-start font-sans">
       {/* Sticky Right Sidebar */}
-      <PortfolioSidebar data={d} slug={(await params).slug} />
+      <PortfolioSidebar data={d} slug={slug} />
 
       {/* Main Content Area (Left side) */}
       <main className="flex-1 w-full min-w-0 bg-white min-h-screen border-r border-slate-200">

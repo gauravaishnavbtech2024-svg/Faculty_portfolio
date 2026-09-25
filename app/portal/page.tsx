@@ -49,11 +49,7 @@ export default async function Dashboard() {
   const h = await headers();
   const host = h.get('x-forwarded-host') || h.get('host') || 'localhost:3000';
   const proto = h.get('x-forwarded-proto') || (host.includes('localhost') ? 'http' : 'https');
-  const origin = host.includes('localhost')
-    ? `http://${host}`
-    : (process.env.NEXT_PUBLIC_SITE_URL && !process.env.NEXT_PUBLIC_SITE_URL.includes('localhost')
-        ? process.env.NEXT_PUBLIC_SITE_URL.replace(/\/+$/, '')
-        : `${proto}://${host}`);
+  const origin = `${proto}://${host}`;
   
   let currentSlug = p.slug;
   if (p.data?.name) {
@@ -155,38 +151,74 @@ export default async function Dashboard() {
           </form>
         </div>
 
-        {/* URL Display Card */}
-        <div className="rounded-2xl bg-slate-50 border border-slate-200 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="min-w-0 flex-1">
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Your Public Portfolio URL</p>
-            <p className="text-sm font-mono font-semibold text-slate-800 truncate">{url}</p>
+        {/* When LIVE: Show Public URL & Copy Button */}
+        {live ? (
+          <div className="rounded-2xl bg-slate-50 border border-slate-200 p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-bold uppercase tracking-wider text-emerald-700 mb-1 flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                Your Live Public Portfolio URL
+              </p>
+              <p className="text-sm font-mono font-semibold text-slate-800 truncate">{url}</p>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <CopyButton text={url} />
+              <Link
+                href={`/f/${currentSlug}`}
+                target="_blank"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-white border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-[#2547d0] transition-colors shadow-sm"
+              >
+                <span>Open Site</span>
+                <svg className="w-3.5 h-3.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                  <polyline points="15 3 21 3 21 9" />
+                  <line x1="10" y1="14" x2="21" y2="3" />
+                </svg>
+              </Link>
+            </div>
           </div>
-          <div className="flex items-center gap-2 shrink-0">
-            <CopyButton text={url} />
-            <Link
-              href={`/f/${currentSlug}`}
-              target="_blank"
-              className="inline-flex items-center gap-1.5 rounded-lg bg-white border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-[#2547d0] transition-colors shadow-sm"
-            >
-              <span>Preview</span>
-              <svg className="w-3.5 h-3.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
-                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                <polyline points="15 3 21 3 21 9" />
-                <line x1="10" y1="14" x2="21" y2="3" />
-              </svg>
-            </Link>
-          </div>
-        </div>
+        ) : (
+          /* When DRAFT: Show Draft Preview & Guidance, NO Copy Link */
+          <div className="rounded-2xl bg-amber-50/70 border border-amber-200/80 p-5 space-y-4">
+            <div className="flex items-start gap-3">
+              <div className="w-9 h-9 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center shrink-0 mt-0.5">
+                <svg className="w-5 h-5 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="16" x2="12" y2="12" />
+                  <line x1="12" y1="8" x2="12.01" y2="8" />
+                </svg>
+              </div>
+              <div className="space-y-1 text-xs sm:text-sm text-amber-950">
+                <p className="font-bold text-amber-900">Your portfolio is in Private Draft Mode</p>
+                <p className="leading-relaxed text-amber-800">
+                  Only you can view this page while signed in. Review your details, make any needed edits, and click <strong>&quot;Publish to World&quot;</strong> above to generate your public link and make it live for students, colleagues, and visitors.
+                </p>
+              </div>
+            </div>
 
-        {!live && (
-          <div className="rounded-xl bg-amber-50/80 border border-amber-200 p-4 text-xs text-amber-900 leading-relaxed flex items-start gap-2.5">
-            <svg className="w-4 h-4 text-amber-700 shrink-0 mt-0.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
-              <circle cx="12" cy="12" r="10" />
-              <line x1="12" y1="16" x2="12" y2="12" />
-              <line x1="12" y1="8" x2="12.01" y2="8" />
-            </svg>
-            <div>
-              <strong>Draft Mode:</strong> Only you can view this page while signed in. When you are satisfied with your preview, click <strong>&quot;Publish to World&quot;</strong> to make it accessible to colleagues, students, and visitors.
+            <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-amber-200/60">
+              <Link
+                href={`/f/${currentSlug}`}
+                target="_blank"
+                className="inline-flex items-center gap-2 rounded-xl bg-white border border-amber-300 px-4 py-2 text-xs font-bold text-amber-900 hover:bg-amber-100/50 transition-colors shadow-sm"
+              >
+                <span>Preview Draft</span>
+                <svg className="w-3.5 h-3.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                  <polyline points="15 3 21 3 21 9" />
+                  <line x1="10" y1="14" x2="21" y2="3" />
+                </svg>
+              </Link>
+              <Link
+                href="/portal/edit"
+                className="inline-flex items-center gap-2 rounded-xl bg-white border border-amber-300 px-4 py-2 text-xs font-bold text-amber-900 hover:bg-amber-100/50 transition-colors shadow-sm"
+              >
+                <svg className="w-3.5 h-3.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
+                  <path d="M12 20h9" />
+                  <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                </svg>
+                <span>Edit Details</span>
+              </Link>
             </div>
           </div>
         )}
