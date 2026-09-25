@@ -128,8 +128,10 @@ export default function PortfolioSidebar({ data }: Props) {
     },
     {
       key: 'email',
-      name: 'Email Faculty',
-      url: data.visible?.email !== false && data.contact?.email ? `mailto:${data.contact.email}` : null,
+      name: 'Gmail Faculty',
+      url: data.visible?.email !== false && data.contact?.email
+        ? `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(data.contact.email)}`
+        : null,
       icon: (
         <svg className="w-3.5 h-3.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
           <rect width="20" height="16" x="2" y="4" rx="2" />
@@ -147,8 +149,8 @@ export default function PortfolioSidebar({ data }: Props) {
             <a
               key={p.key}
               href={p.url}
-              target={p.key === 'email' ? undefined : '_blank'}
-              rel={p.key === 'email' ? undefined : 'noopener noreferrer'}
+              target="_blank"
+              rel="noopener noreferrer"
               title={`${p.name} (Click to open)`}
               className="w-8 h-8 rounded-full bg-white/15 hover:bg-white text-white hover:text-[#2547d0] flex items-center justify-center transition-all duration-150 shadow-sm cursor-pointer hover:scale-110"
             >

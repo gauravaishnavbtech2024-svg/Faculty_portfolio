@@ -349,7 +349,12 @@ export default async function Portfolio({ params }: Props) {
                 {d.visible?.email && d.contact?.email && (
                   <div>
                     <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Email</p>
-                    <a href={`mailto:${d.contact.email}`} className="text-sm font-semibold text-[#2547d0] hover:underline mt-1 block">
+                    <a
+                      href={`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(d.contact.email)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm font-semibold text-[#2547d0] hover:underline mt-1 block"
+                    >
                       {d.contact.email}
                     </a>
                   </div>
