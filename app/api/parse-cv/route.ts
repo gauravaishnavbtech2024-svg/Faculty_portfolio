@@ -11,6 +11,7 @@ export const runtime = 'nodejs';
 export const maxDuration = 60;
 
 const MAX = 4 * 1024 * 1024; // Vercel rejects request bodies above ~4.5 MB
+
 const PROMPT = `You are an expert academic curriculum vitae (CV) parser. Extract comprehensive structured information from this faculty CV.
 Return ONLY valid JSON matching this exact structure:
 {
@@ -68,11 +69,59 @@ Extraction guidelines:
 6. "bio": A well-written 2-4 sentence academic biography summarizing their background, research areas, and focus.
 7. "courses": List of courses taught (e.g., "Computer Security", "Relational Databases", "Internet of Things").
 8. "publications": Include title, co-authors/authors string, conference/journal name in venue, publication year, and DOI/URL link if present.
-9. "links": Search the CV thoroughly for LinkedIn profiles/URLs/handles, Google Scholar, GitHub, ORCID, ResearchGate, DBLP, or personal homepages. Provide full URLs (e.g. https://www.linkedin.com/in/username).
+9. "links": Search the CV for all profile URLs (LinkedIn, Google Scholar, GitHub, ORCID, ResearchGate, DBLP, personal website).
+   IMPORTANT FOR HYPERLINKS: If the CV contains hyperlinked text (e.g. text that says "GitHub", "LinkedIn", "Google Scholar", "Profile", or a clickable icon with an embedded URL), you MUST extract the underlying target URL and place it in the appropriate field.
 10. "contact": Extract email, phone number, room/office number, and university campus address.
 11. Leave missing items as empty strings or empty lists. Do not fabricate information.`;
 
 const fail = (error: string, status: number) => NextResponse.json({ error }, { status });
+
+function extractPdfHyperlinks(buf: Buffer): string[] {
+  const content = buf.toString('latin1');
+  const urls = new Set<string>();
+
+  // Extract /URI (http...) or /URI <hex> annotations
+  const uriRegex = /\/URI\s*\(([^)]+)\)/g;
+  let m;
+  while ((m = uriRegex.exec(content)) !== null) {
+    const raw = m[1].replace(/\\([()\\])/g, '$1').trim();
+    if (/^https?:\/\//i.test(raw) || /^mailto:/i.test(raw)) {
+      urls.add(raw);
+    }
+  }
+
+  // Extract explicit http:// or https:// patterns in stream text
+  const httpRegex = /https?:\/\/[a-zA-Z0-9-._~:/?#[\]@!$&'()*+,;=%]+/g;
+  while ((m = httpRegex.exec(content)) !== null) {
+    const raw = m[0].replace(/[),;.]+$/, '').trim();
+    if (raw.length > 8) {
+      urls.add(raw);
+    }
+  }
+
+  return Array.from(urls);
+}
+
+function autoFillLinksFromExtracted(linksObj: Record<string, string>, extractedList: string[]) {
+  for (const url of extractedList) {
+    const norm = normalizeUrl(url);
+    if (!norm) continue;
+
+    if (/linkedin\.com/i.test(norm) && (!linksObj.linkedin || linksObj.linkedin === '')) {
+      linksObj.linkedin = norm;
+    } else if (/github\.com/i.test(norm) && (!linksObj.github || linksObj.github === '')) {
+      linksObj.github = norm;
+    } else if (/scholar\.google/i.test(norm) && (!linksObj.scholar || linksObj.scholar === '')) {
+      linksObj.scholar = norm;
+    } else if (/orcid\.org/i.test(norm) && (!linksObj.orcid || linksObj.orcid === '')) {
+      linksObj.orcid = norm;
+    } else if (/researchgate\.net/i.test(norm) && (!linksObj.researchgate || linksObj.researchgate === '')) {
+      linksObj.researchgate = norm;
+    } else if (/dblp\.(?:org|uni)/i.test(norm) && (!linksObj.dblp || linksObj.dblp === '')) {
+      linksObj.dblp = norm;
+    }
+  }
+}
 
 export async function POST(req: Request) {
   const me = await currentOwner();
@@ -87,10 +136,41 @@ export async function POST(req: Request) {
 
   const buf = Buffer.from(await file.arrayBuffer());
   let data: PortfolioData;
+  const extractedPdfLinks: string[] = [];
+
   try {
-    const part = isPdf
-      ? { inlineData: { mimeType: 'application/pdf', data: buf.toString('base64') } }
-      : { text: (await mammoth.extractRawText({ buffer: buf })).value };
+    let parts: any[] = [];
+
+    if (isPdf) {
+      const pdfLinks = extractPdfHyperlinks(buf);
+      extractedPdfLinks.push(...pdfLinks);
+      const linksContext = pdfLinks.length > 0
+        ? `\n\n[EMBEDDED HYPERLINKS & ANNOTATION URIS EXTRACTED FROM THIS PDF DOCUMENT]:\n${pdfLinks.map((l) => `- ${l}`).join('\n')}\n`
+        : '';
+
+      parts = [
+        { text: PROMPT + linksContext },
+        { inlineData: { mimeType: 'application/pdf', data: buf.toString('base64') } },
+      ];
+    } else {
+      // For DOCX: convert to HTML which preserves all <a href="..."> hyperlinks
+      const htmlRes = await mammoth.convertToHtml({ buffer: buf });
+      const htmlContent = htmlRes.value;
+
+      // Also extract any hrefs from the HTML
+      const hrefRegex = /href="([^"]+)"/g;
+      let match;
+      while ((match = hrefRegex.exec(htmlContent)) !== null) {
+        if (/^https?:\/\//i.test(match[1])) {
+          extractedPdfLinks.push(match[1]);
+        }
+      }
+
+      parts = [
+        { text: `${PROMPT}\n\n[DOCUMENT CONTENT IN HTML WITH EMBEDDED HYPERLINKS]:\n${htmlContent}` },
+      ];
+    }
+
     const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
     
     const candidateModels = [
@@ -106,7 +186,7 @@ export async function POST(req: Request) {
       try {
         const res = await ai.models.generateContent({
           model,
-          contents: [{ role: 'user', parts: [{ text: PROMPT }, part] }],
+          contents: [{ role: 'user', parts }],
           config: { responseMimeType: 'application/json' },
         });
         if (res.text) {
@@ -131,11 +211,18 @@ export async function POST(req: Request) {
   }
 
   // Normalize all social media and profile links
-  if (data.links) {
-    for (const key of Object.keys(data.links) as (keyof typeof data.links)[]) {
-      const normalized = normalizeUrl(data.links[key], key);
-      data.links[key] = normalized || '';
-    }
+  if (!data.links) {
+    data.links = { scholar: '', linkedin: '', orcid: '', github: '', researchgate: '', dblp: '', website: '' };
+  }
+
+  // Auto-fill any missing links from embedded document annotations
+  if (extractedPdfLinks.length > 0) {
+    autoFillLinksFromExtracted(data.links as Record<string, string>, extractedPdfLinks);
+  }
+
+  for (const key of Object.keys(data.links) as (keyof typeof data.links)[]) {
+    const normalized = normalizeUrl(data.links[key], key);
+    data.links[key] = normalized || '';
   }
 
   data.visible = { email: true, phone: false, office: true, address: true }; // phone hidden by default
