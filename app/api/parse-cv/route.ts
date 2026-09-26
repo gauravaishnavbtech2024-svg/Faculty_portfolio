@@ -12,8 +12,15 @@ export const maxDuration = 60;
 
 const MAX = 4 * 1024 * 1024; // Vercel rejects request bodies above ~4.5 MB
 
-const PROMPT = `You are an expert academic curriculum vitae (CV) parser. Extract comprehensive structured information from this faculty CV.
-Return ONLY valid JSON matching this exact structure:
+const PROMPT = `You are an expert academic curriculum vitae (CV) parser. Extract exhaustive, complete, and structured information from this faculty CV.
+
+CRITICAL EXTRACTION REQUIREMENTS (DO NOT SHORTEN OR OMIT):
+- DO NOT SHORTEN, SUMMARIZE, TRUNCATE, OR LIMIT ANY SECTION.
+- Extract EVERY SINGLE ITEM present in the CV without exception (e.g. all 100% of publications, every work experience, all degrees, all projects, all awards, all taught courses, all research interests).
+- Preserve all details and column attributes present in the CV tables or lists (e.g., DOI, volume, issue, page numbers, publishers, supervisor, CGPA, funding amount, dates).
+- If the CV contains additional sections not fitting the standard fields (e.g. Patents, Certifications, Ph.D. Guidance, Workshops/FDPs Attended/Conducted, Keynote Talks, Professional Memberships, Administrative Roles), extract each into "custom_sections".
+
+Return ONLY valid JSON matching this structure:
 {
   "name": "",
   "designation": "",
@@ -43,12 +50,22 @@ Return ONLY valid JSON matching this exact structure:
   "research_interests": [
     ""
   ],
+  "custom_sections": [
+    {
+      "title": "",
+      "items": [
+        { "title": "", "description": "", "year": "" }
+      ]
+    }
+  ],
   "links": {
     "scholar": "",
-    "linkedin": "",
+    "scopus": "",
+    "vidwan": "",
     "orcid": "",
-    "github": "",
     "researchgate": "",
+    "linkedin": "",
+    "github": "",
     "dblp": "",
     "website": ""
   },
@@ -60,19 +77,34 @@ Return ONLY valid JSON matching this exact structure:
   }
 }
 
-Extraction guidelines:
+Field extraction rules:
 1. "name": Full name of the faculty member (e.g., "Dr. Mohamed-Lamine MESSAI").
-2. "designation": Academic title (e.g., "Associate Professor", "Assistant Professor", "Professor").
-3. "department": Academic department (e.g., "Department of Computer Science").
-4. "institution": University or institution name (e.g., "Université Lumière Lyon 2").
-5. "affiliation_badge": Professional memberships or prominent honors if mentioned (e.g. "Senior Member of IEEE", "Member of the ACM", "Fellow of Royal Society").
-6. "bio": A well-written 2-4 sentence academic biography summarizing their background, research areas, and focus.
-7. "courses": List of courses taught (e.g., "Computer Security", "Relational Databases", "Internet of Things").
-8. "publications": Include title, co-authors/authors string, conference/journal name in venue, publication year, and DOI/URL link if present.
-9. "links": Search the CV for all profile URLs (LinkedIn, Google Scholar, GitHub, ORCID, ResearchGate, DBLP, personal website).
-   IMPORTANT FOR HYPERLINKS: If the CV contains hyperlinked text (e.g. text that says "GitHub", "LinkedIn", "Google Scholar", "Profile", or a clickable icon with an embedded URL), you MUST extract the underlying target URL and place it in the appropriate field.
-10. "contact": Extract email, phone number, room/office number, and university campus address.
-11. Leave missing items as empty strings or empty lists. Do not fabricate information.`;
+2. "designation": Academic title (e.g., "Associate Professor", "Assistant Professor", "Professor", "Dean").
+3. "department": Academic department / Faculty (e.g., "Department of Computer Science & Engineering").
+4. "institution": University or institution name (e.g., "The ICFAI University, Jaipur").
+5. "affiliation_badge": Notable professional memberships / designations (e.g. "Senior Member IEEE", "ACM Member", "Fellow").
+6. "bio": A thorough, accurate academic biography covering background, research expertise, teaching philosophy, and achievements.
+7. "courses": Complete list of ALL courses and subjects taught.
+8. "research_interests": Complete list of ALL research areas and interest topics.
+9. "publications": Exhaustive list of ALL research papers, journal articles, conference proceedings, book chapters, and books. For each publication, include title, authors, venue/journal name, year, link/DOI, and any additional fields present in the CV.
+10. "education": Complete academic qualifications (Ph.D., Master's, Bachelor's, etc.) with degree, institution, year, plus any extra fields (e.g. specialization, grade, supervisor).
+11. "experience": Complete employment and professional history.
+12. "projects": Complete list of all research projects, funded grants, and industrial consultancy.
+13. "awards": Complete list of all honors, awards, fellowships, and medals.
+14. "custom_sections": Any other distinct sections from the CV (e.g., "Patents", "Certifications", "Workshops & Seminars", "PhD Guidance", "Memberships", "Keynote Addresses").
+15. "links": Search the CV for all academic & profile links:
+    - Scopus Author ID / URL (scopus.com or numeric author ID)
+    - Vidwan Profile ID / URL (vidwan.inflibnet.ac.in or Vidwan ID)
+    - Google Scholar profile URL
+    - ORCID ID / URL
+    - ResearchGate profile URL
+    - LinkedIn profile URL
+    - GitHub profile URL
+    - DBLP profile URL
+    - Personal / lab website URL
+    IMPORTANT FOR HYPERLINKS: If the document has embedded hyperlinks or clickable icons/text, extract the underlying target URL.
+16. "contact": Extract email, phone number, room/office number, and campus address.
+17. Leave missing items as empty strings or empty lists. Do not fabricate fake data.`;
 
 const fail = (error: string, status: number) => NextResponse.json({ error }, { status });
 
@@ -107,7 +139,11 @@ function autoFillLinksFromExtracted(linksObj: Record<string, string>, extractedL
     const norm = normalizeUrl(url);
     if (!norm) continue;
 
-    if (/linkedin\.com/i.test(norm) && (!linksObj.linkedin || linksObj.linkedin === '')) {
+    if (/scopus\.com/i.test(norm) && (!linksObj.scopus || linksObj.scopus === '')) {
+      linksObj.scopus = norm;
+    } else if (/vidwan(?:\.inflibnet\.ac\.in)?/i.test(norm) && (!linksObj.vidwan || linksObj.vidwan === '')) {
+      linksObj.vidwan = norm;
+    } else if (/linkedin\.com/i.test(norm) && (!linksObj.linkedin || linksObj.linkedin === '')) {
       linksObj.linkedin = norm;
     } else if (/github\.com/i.test(norm) && (!linksObj.github || linksObj.github === '')) {
       linksObj.github = norm;
@@ -212,7 +248,7 @@ export async function POST(req: Request) {
 
   // Normalize all social media and profile links
   if (!data.links) {
-    data.links = { scholar: '', linkedin: '', orcid: '', github: '', researchgate: '', dblp: '', website: '' };
+    data.links = { scholar: '', scopus: '', vidwan: '', linkedin: '', orcid: '', github: '', researchgate: '', dblp: '', website: '' };
   }
 
   // Auto-fill any missing links from embedded document annotations
@@ -220,8 +256,8 @@ export async function POST(req: Request) {
     autoFillLinksFromExtracted(data.links as Record<string, string>, extractedPdfLinks);
   }
 
-  for (const key of Object.keys(data.links) as (keyof typeof data.links)[]) {
-    const normalized = normalizeUrl(data.links[key], key);
+  for (const key of Object.keys(data.links)) {
+    const normalized = normalizeUrl(String(data.links[key] || ''), key);
     data.links[key] = normalized || '';
   }
 

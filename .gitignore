@@ -20,6 +20,8 @@
 
 # Large media / reference
 reference.mp4
+*.MOV
+*.mp4
 
 # Debug & system
 npm-debug.log*

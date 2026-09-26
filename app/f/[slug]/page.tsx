@@ -23,6 +23,28 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 const safe = (u?: string) => (u && /^https?:\/\//i.test(u) ? u : undefined);
 
+function renderCustomFields(item: Record<string, any>, standardKeys: string[]) {
+  if (!item || typeof item !== 'object') return null;
+  const extraKeys = Object.keys(item).filter(
+    (k) => !standardKeys.includes(k) && item[k] !== undefined && item[k] !== null && String(item[k]).trim() !== ''
+  );
+  if (extraKeys.length === 0) return null;
+
+  return (
+    <div className="mt-2.5 flex flex-wrap items-center gap-1.5 pt-1.5 border-t border-slate-100">
+      {extraKeys.map((k) => (
+        <span
+          key={k}
+          className="inline-flex items-center gap-1 text-[11px] px-2.5 py-0.5 rounded-md bg-slate-100/90 text-slate-700 border border-slate-200"
+        >
+          <span className="font-bold text-slate-500 capitalize">{k.replace(/_/g, ' ')}:</span>
+          <span className="font-medium text-slate-800">{String(item[k])}</span>
+        </span>
+      ))}
+    </div>
+  );
+}
+
 export default async function Portfolio({ params }: Props) {
   const { slug } = await params;
   const row = await getRow(slug);
@@ -128,7 +150,8 @@ export default async function Portfolio({ params }: Props) {
           )}
 
           {/* Section: Research & Development */}
-          {((Array.isArray(d.research_interests) && d.research_interests.length > 0) || (Array.isArray(d.projects) && d.projects.length > 0)) && (
+          {((Array.isArray(d.research_interests) && d.research_interests.length > 0) ||
+            (Array.isArray(d.projects) && d.projects.length > 0)) && (
             <section id="research" className="scroll-mt-6">
               <h2 className="text-2xl font-bold text-slate-900 border-b-2 border-slate-100 pb-3 tracking-tight">
                 Research & Development
@@ -165,20 +188,33 @@ export default async function Portfolio({ params }: Props) {
                     </h3>
                     <div className="space-y-3.5">
                       {d.projects.map((p, i) => (
-                        <div key={i} className="p-4 rounded-xl border border-slate-200 bg-slate-50/70 hover:border-[#002147]/40 transition-colors">
+                        <div
+                          key={i}
+                          className="p-4 rounded-xl border border-slate-200 bg-slate-50/70 hover:border-[#002147]/40 transition-colors"
+                        >
                           <div className="flex items-baseline justify-between gap-2">
                             <h4 className="font-semibold text-slate-900 text-sm">
                               {safe(p.link) ? (
-                                <a href={p.link} target="_blank" rel="noopener noreferrer" className="text-[#002147] hover:text-[#e31e34] hover:underline">
+                                <a
+                                  href={p.link}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-[#002147] hover:text-[#e31e34] hover:underline"
+                                >
                                   {p.title}
                                 </a>
                               ) : (
                                 p.title
                               )}
                             </h4>
-                            {p.year && <span className="text-xs font-semibold text-slate-500 shrink-0">{p.year}</span>}
+                            {p.year && (
+                              <span className="text-xs font-semibold text-slate-500 shrink-0">{p.year}</span>
+                            )}
                           </div>
-                          {p.description && <p className="mt-1.5 text-xs text-slate-600 leading-relaxed">{p.description}</p>}
+                          {p.description && (
+                            <p className="mt-1.5 text-xs text-slate-600 leading-relaxed">{p.description}</p>
+                          )}
+                          {renderCustomFields(p, ['title', 'description', 'year', 'link'])}
                         </div>
                       ))}
                     </div>
@@ -189,7 +225,8 @@ export default async function Portfolio({ params }: Props) {
           )}
 
           {/* Section: Experience & Education */}
-          {((Array.isArray(d.experience) && d.experience.length > 0) || (Array.isArray(d.education) && d.education.length > 0)) && (
+          {((Array.isArray(d.experience) && d.experience.length > 0) ||
+            (Array.isArray(d.education) && d.education.length > 0)) && (
             <section id="experience" className="scroll-mt-6">
               <h2 className="text-2xl font-bold text-slate-900 border-b-2 border-slate-100 pb-3 tracking-tight">
                 Experience & Education
@@ -199,7 +236,9 @@ export default async function Portfolio({ params }: Props) {
                 {/* Work Experience */}
                 {Array.isArray(d.experience) && d.experience.length > 0 && (
                   <div>
-                    <h3 className="text-base font-bold text-slate-800 mb-4">Academic & Professional Experience</h3>
+                    <h3 className="text-base font-bold text-slate-800 mb-4">
+                      Academic & Professional Experience
+                    </h3>
                     <div className="relative pl-6 border-l-2 border-[#bad0ed] space-y-6">
                       {d.experience.map((e, i) => (
                         <div key={i} className="relative">
@@ -211,7 +250,10 @@ export default async function Portfolio({ params }: Props) {
                             </span>
                           </div>
                           <p className="text-sm font-medium text-[#002147] mt-0.5">{e.organization}</p>
-                          {e.description && <p className="text-sm text-slate-600 mt-2 leading-relaxed">{e.description}</p>}
+                          {e.description && (
+                            <p className="text-sm text-slate-600 mt-2 leading-relaxed">{e.description}</p>
+                          )}
+                          {renderCustomFields(e, ['role', 'organization', 'start', 'end', 'description'])}
                         </div>
                       ))}
                     </div>
@@ -231,6 +273,7 @@ export default async function Portfolio({ params }: Props) {
                             {e.year && <span className="text-xs text-slate-500 font-semibold">{e.year}</span>}
                           </div>
                           <p className="text-sm text-slate-600 mt-0.5">{e.institution}</p>
+                          {renderCustomFields(e, ['degree', 'institution', 'year'])}
                         </div>
                       ))}
                     </div>
@@ -247,7 +290,7 @@ export default async function Portfolio({ params }: Props) {
                 Publications
               </h2>
               <p className="mt-3 text-sm text-slate-500">
-                Selected journal papers, conference proceedings, and book chapters.
+                Journal papers, conference proceedings, book chapters, and academic publications.
               </p>
 
               <div className="mt-6 space-y-4">
@@ -260,7 +303,12 @@ export default async function Portfolio({ params }: Props) {
                       <div className="flex-1">
                         <h3 className="font-semibold text-slate-900 text-base leading-snug">
                           {safe(p.link) ? (
-                            <a href={p.link} target="_blank" rel="noopener noreferrer" className="text-[#002147] hover:text-[#e31e34] hover:underline">
+                            <a
+                              href={p.link}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-[#002147] hover:text-[#e31e34] hover:underline"
+                            >
                               {p.title}
                             </a>
                           ) : (
@@ -268,15 +316,14 @@ export default async function Portfolio({ params }: Props) {
                           )}
                         </h3>
                         {p.authors && (
-                          <p className="text-xs text-slate-600 mt-1.5 font-medium">
-                            {p.authors}
-                          </p>
+                          <p className="text-xs text-slate-600 mt-1.5 font-medium">{p.authors}</p>
                         )}
                         {p.venue && (
                           <p className="text-xs text-slate-500 mt-1 italic">
                             {p.venue} {p.year ? `(${p.year})` : ''}
                           </p>
                         )}
+                        {renderCustomFields(p, ['title', 'authors', 'venue', 'year', 'link'])}
                       </div>
                       {safe(p.link) && (
                         <a
@@ -303,21 +350,80 @@ export default async function Portfolio({ params }: Props) {
               </h2>
               <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {d.awards.map((a, i) => (
-                  <div key={i} className="p-4 rounded-xl border border-amber-200/90 bg-amber-50/50 flex items-start gap-3 shadow-sm">
+                  <div
+                    key={i}
+                    className="p-4 rounded-xl border border-amber-200/90 bg-amber-50/50 flex items-start gap-3 shadow-sm"
+                  >
                     <div className="w-8 h-8 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
                       <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
                         <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                       </svg>
                     </div>
-                    <div>
+                    <div className="flex-1 min-w-0">
                       <h3 className="font-bold text-slate-900 text-sm">{a.title}</h3>
-                      <p className="text-xs text-slate-600 mt-0.5">{[a.issuer, a.year].filter(Boolean).join(' • ')}</p>
+                      <p className="text-xs text-slate-600 mt-0.5">
+                        {[a.issuer, a.year].filter(Boolean).join(' • ')}
+                      </p>
+                      {renderCustomFields(a, ['title', 'issuer', 'year'])}
                     </div>
                   </div>
                 ))}
               </div>
             </section>
           )}
+
+          {/* Custom Sections (e.g. Patents, Certifications, PhD Guidance, Workshops) */}
+          {Array.isArray(d.custom_sections) &&
+            d.custom_sections
+              .filter((cs) => cs && cs.title && Array.isArray(cs.items) && cs.items.length > 0)
+              .map((cs, idx) => {
+                const sectionId = cs.id || `custom-${idx}`;
+                return (
+                  <section key={idx} id={sectionId} className="scroll-mt-6">
+                    <h2 className="text-2xl font-bold text-slate-900 border-b-2 border-slate-100 pb-3 tracking-tight flex items-center gap-2.5">
+                      <span className="w-3 h-3 rounded-full bg-[#002147]" />
+                      {cs.title}
+                    </h2>
+
+                    <div className="mt-6 space-y-4">
+                      {cs.items.map((it, itemIdx) => (
+                        <div
+                          key={itemIdx}
+                          className="p-5 rounded-xl border border-slate-200 bg-white hover:shadow-md hover:border-[#002147]/40 transition-all duration-150"
+                        >
+                          <div className="flex items-baseline justify-between gap-2">
+                            <h3 className="font-bold text-slate-900 text-base">
+                              {it.link && safe(it.link) ? (
+                                <a
+                                  href={it.link}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-[#002147] hover:text-[#e31e34] hover:underline"
+                                >
+                                  {it.title || it.name || `Item ${itemIdx + 1}`}
+                                </a>
+                              ) : (
+                                it.title || it.name || `Item ${itemIdx + 1}`
+                              )}
+                            </h3>
+                            {it.year && (
+                              <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-[#eff4fa] text-[#002147]">
+                                {it.year}
+                              </span>
+                            )}
+                          </div>
+                          {it.description && (
+                            <p className="mt-1.5 text-xs sm:text-sm text-slate-600 leading-relaxed">
+                              {it.description}
+                            </p>
+                          )}
+                          {renderCustomFields(it, ['title', 'name', 'description', 'year', 'link'])}
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+                );
+              })}
 
           {/* Section: Contact & Location */}
           <section id="contact" className="scroll-mt-6 pt-4 border-t border-slate-200">
@@ -335,7 +441,9 @@ export default async function Portfolio({ params }: Props) {
                 {d.visible?.address && d.contact?.address && (
                   <div>
                     <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Campus Address</p>
-                    <p className="text-sm font-medium text-slate-800 mt-1 whitespace-pre-line">{d.contact.address}</p>
+                    <p className="text-sm font-medium text-slate-800 mt-1 whitespace-pre-line">
+                      {d.contact.address}
+                    </p>
                   </div>
                 )}
 
@@ -373,7 +481,9 @@ export default async function Portfolio({ params }: Props) {
                 <iframe
                   title="Campus Map"
                   className="w-full h-full border-0 grayscale hover:grayscale-0 transition-all duration-300"
-                  src={`https://maps.google.com/maps?q=${encodeURIComponent(d.contact?.address || d.institution || 'University Campus')}&t=&z=14&ie=UTF8&iwloc=&output=embed`}
+                  src={`https://maps.google.com/maps?q=${encodeURIComponent(
+                    d.contact?.address || d.institution || 'University Campus'
+                  )}&t=&z=14&ie=UTF8&iwloc=&output=embed`}
                   loading="lazy"
                 />
               </div>

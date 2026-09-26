@@ -30,8 +30,8 @@ export async function saveData(raw: unknown) {
   const data = PortfolioData.parse(raw);
 
   if (data.links) {
-    for (const key of Object.keys(data.links) as (keyof typeof data.links)[]) {
-      const normalized = normalizeUrl(data.links[key], key);
+    for (const key of Object.keys(data.links)) {
+      const normalized = normalizeUrl(String(data.links[key] || ''), key);
       data.links[key] = normalized || '';
     }
   }

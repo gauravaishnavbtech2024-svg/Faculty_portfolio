@@ -32,6 +32,14 @@ export function normalizeUrl(raw?: string | null, type?: string): string | null 
     case 'scholar':
       if (/scholar\.google/i.test(cleanHandle)) return `https://${cleanHandle}`;
       return `https://scholar.google.com/citations?user=${cleanHandle}`;
+    case 'scopus':
+      if (/scopus\.com/i.test(cleanHandle)) return `https://${cleanHandle}`;
+      const scopusId = cleanHandle.replace(/^authorId=/i, '').trim();
+      return `https://www.scopus.com/authid/detail.uri?authorId=${scopusId}`;
+    case 'vidwan':
+    case 'widwan':
+      if (/vidwan\.inflibnet\.ac\.in/i.test(cleanHandle)) return `https://${cleanHandle}`;
+      return `https://vidwan.inflibnet.ac.in/profile/${cleanHandle}`;
     case 'orcid':
       if (/orcid\.org/i.test(cleanHandle)) return `https://${cleanHandle}`;
       return `https://orcid.org/${cleanHandle}`;
