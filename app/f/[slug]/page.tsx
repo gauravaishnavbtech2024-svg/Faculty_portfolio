@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { supabaseAdmin, currentOwner } from '@/lib/supabase';
 import type { PortfolioData } from '@/lib/schema';
 import PortfolioSidebar from '@/components/PortfolioSidebar';
+import PublicationsSection from '@/components/PublicationsSection';
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -299,63 +300,12 @@ export default async function Portfolio({ params }: Props) {
             </section>
           )}
 
-          {/* Section: Publications */}
+          {/* Section: Publications with Dynamic Segregation Tabs */}
           {Array.isArray(d.publications) && d.publications.length > 0 && (
-            <section id="publications" className="scroll-mt-6">
-              <h2 className="text-2xl font-bold text-slate-900 border-b-2 border-slate-100 pb-3 tracking-tight">
-                Publications
-              </h2>
-              <p className="mt-3 text-sm text-slate-500">
-                Journal papers, conference proceedings, book chapters, and academic publications.
-              </p>
-
-              <div className="mt-6 space-y-4">
-                {d.publications.map((p, i) => (
-                  <div
-                    key={i}
-                    className="p-5 rounded-xl border border-slate-200 bg-white hover:shadow-md hover:border-[#002147]/40 transition-all duration-150"
-                  >
-                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-slate-900 text-base leading-snug">
-                          {safe(p.link) ? (
-                            <a
-                              href={p.link}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-[#002147] hover:text-[#e31e34] hover:underline"
-                            >
-                              {p.title}
-                            </a>
-                          ) : (
-                            p.title
-                          )}
-                        </h3>
-                        {p.authors && (
-                          <p className="text-xs text-slate-600 mt-1.5 font-medium">{p.authors}</p>
-                        )}
-                        {p.venue && (
-                          <p className="text-xs text-slate-500 mt-1 italic">
-                            {p.venue} {p.year ? `(${p.year})` : ''}
-                          </p>
-                        )}
-                        {renderCustomFields(p, ['title', 'authors', 'venue', 'year', 'link'])}
-                      </div>
-                      {safe(p.link) && (
-                        <a
-                          href={p.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="self-start shrink-0 px-3 py-1.5 rounded-lg bg-[#eff4fa] text-[#002147] hover:bg-[#002147] hover:text-white text-xs font-semibold border border-[#dbe6f5] transition-colors"
-                        >
-                          View Paper &rarr;
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </section>
+            <PublicationsSection
+              publications={d.publications}
+              renderCustomFields={renderCustomFields}
+            />
           )}
 
           {/* Section: Awards */}

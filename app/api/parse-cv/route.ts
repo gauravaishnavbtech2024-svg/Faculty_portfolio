@@ -37,7 +37,7 @@ Return ONLY valid JSON matching this structure:
     { "role": "", "organization": "", "start": "", "end": "", "description": "" }
   ],
   "publications": [
-    { "title": "", "authors": "", "venue": "", "year": "", "link": "" }
+    { "title": "", "authors": "", "venue": "", "year": "", "link": "", "type": "" }
   ],
   "projects": [
     { "title": "", "description": "", "year": "", "link": "" }
@@ -87,7 +87,7 @@ Field extraction rules:
 6. "bio": A thorough, accurate academic biography covering background, research expertise, teaching philosophy, and achievements.
 7. "courses": Complete list of ALL courses and subjects taught.
 8. "research_interests": Complete list of ALL research areas and interest topics.
-9. "publications": Exhaustive list of ALL research papers, journal articles, conference proceedings, book chapters, and books. For each publication, include title, authors, venue/journal name, year, link/DOI, and any additional fields present in the CV.
+9. "publications": Exhaustive list of ALL research papers, journal articles, conference proceedings, book chapters, books, and patents. For each publication, include "title", "authors", "venue" (journal/conference name), "year", "link" (DOI/URL if present), and "type" (categorize precisely according to the CV section or venue, e.g. "Journal Papers", "Conference Proceedings", "Book Chapters", "Books", "Patents", or the specific category heading in the CV).
 10. "education": Complete academic qualifications (Ph.D., Master's, Bachelor's, etc.) with degree, institution, year, plus any extra fields (e.g. specialization, grade, supervisor).
 11. "experience": Complete employment and professional history.
 12. "projects": Complete list of all research projects, funded grants, and industrial consultancy.

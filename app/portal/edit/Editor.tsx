@@ -8,7 +8,7 @@ import ImageCropModal from '@/components/ImageCropModal';
 const DEFAULT_SECTION_COLUMNS: Record<string, string[]> = {
   education: ['degree', 'institution', 'year'],
   experience: ['role', 'organization', 'start', 'end', 'description'],
-  publications: ['title', 'authors', 'venue', 'year', 'link'],
+  publications: ['title', 'authors', 'venue', 'year', 'type', 'link'],
   projects: ['title', 'description', 'year', 'link'],
   awards: ['title', 'issuer', 'year'],
 };
@@ -534,6 +534,12 @@ export default function Editor({ initial }: { initial: PortfolioData }) {
                       <Field
                         k={f}
                         v={item[f] || ''}
+                        label={sec === 'publications' && f === 'type' ? 'Category / Type' : undefined}
+                        placeholder={
+                          sec === 'publications' && f === 'type'
+                            ? 'e.g. Journal Paper, Conference Proceeding, Book Chapter, Book'
+                            : undefined
+                        }
                         on={(v) =>
                           upd((c) => {
                             c[sec][i][f] = v;
