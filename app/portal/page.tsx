@@ -31,7 +31,7 @@ export default async function Dashboard() {
         </div>
         <h1 className="text-2xl font-bold text-slate-900">Create Your Faculty Portfolio</h1>
         <p className="mt-2 text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
-          Upload your curriculum vitae (PDF or DOCX). Our AI will instantly parse your academic achievements and construct your personal portfolio website.
+          Upload your curriculum vitae (PDF, DOC, or DOCX). Our AI will instantly parse your academic achievements and construct your personal portfolio website.
         </p>
         <Link
           href="/portal/upload"

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
 import mammoth from 'mammoth';
+import WordExtractor from 'word-extractor';
 import { GoogleGenAI } from '@google/genai';
 import { currentOwner, supabaseAdmin } from '@/lib/supabase';
 import { PortfolioData } from '@/lib/schema';
@@ -166,8 +167,10 @@ export async function POST(req: Request) {
   const file = (await req.formData()).get('file');
   if (!(file instanceof File)) return fail('No file received.', 400);
   const name = file.name.toLowerCase();
-  const isPdf = name.endsWith('.pdf'), isDocx = name.endsWith('.docx');
-  if (!isPdf && !isDocx) return fail('Only PDF or DOCX files are accepted.', 400);
+  const isPdf = name.endsWith('.pdf');
+  const isDocx = name.endsWith('.docx');
+  const isDoc = name.endsWith('.doc');
+  if (!isPdf && !isDocx && !isDoc) return fail('Only PDF, DOC, or DOCX files are accepted.', 400);
   if (file.size > MAX) return fail('File is larger than 4 MB.', 400);
 
   const buf = Buffer.from(await file.arrayBuffer());
@@ -188,7 +191,7 @@ export async function POST(req: Request) {
         { text: PROMPT + linksContext },
         { inlineData: { mimeType: 'application/pdf', data: buf.toString('base64') } },
       ];
-    } else {
+    } else if (isDocx) {
       // For DOCX: convert to HTML which preserves all <a href="..."> hyperlinks
       const htmlRes = await mammoth.convertToHtml({ buffer: buf });
       const htmlContent = htmlRes.value;
@@ -204,6 +207,30 @@ export async function POST(req: Request) {
 
       parts = [
         { text: `${PROMPT}\n\n[DOCUMENT CONTENT IN HTML WITH EMBEDDED HYPERLINKS]:\n${htmlContent}` },
+      ];
+    } else if (isDoc) {
+      // For legacy DOC files (Word 97-2003 binary format)
+      const extractor = new WordExtractor();
+      const extractedDoc = await extractor.extract(buf);
+      const docBody = extractedDoc.getBody();
+      const docHeaders = extractedDoc.getHeaders({ includeFooters: false }) || '';
+      const docFooters = extractedDoc.getFooters() || '';
+      const docAnnotations = extractedDoc.getAnnotations() || '';
+
+      const fullDocText = [docHeaders, docBody, docFooters, docAnnotations].filter(Boolean).join('\n\n');
+
+      // Extract any explicit URLs in the text
+      const httpRegex = /https?:\/\/[a-zA-Z0-9-._~:/?#[\]@!$&'()*+,;=%]+/g;
+      let m;
+      while ((m = httpRegex.exec(fullDocText)) !== null) {
+        const raw = m[0].replace(/[),;.]+$/, '').trim();
+        if (raw.length > 8) {
+          extractedPdfLinks.push(raw);
+        }
+      }
+
+      parts = [
+        { text: `${PROMPT}\n\n[DOCUMENT CONTENT EXTRACTED FROM DOC FILE]:\n${fullDocText}` },
       ];
     }
 
@@ -243,7 +270,7 @@ export async function POST(req: Request) {
     data = PortfolioData.parse(JSON.parse(cleanJson));
   } catch (err) {
     console.error('[DEBUG PARSE CV ERROR]:', err);
-    return fail('We could not read this CV. Try a text-based PDF or a DOCX file.', 422);
+    return fail('We could not read this CV. Try a text-based PDF, DOC, or DOCX file.', 422);
   }
 
   // Normalize all social media and profile links

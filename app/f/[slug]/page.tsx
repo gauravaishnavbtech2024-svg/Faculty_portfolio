@@ -79,22 +79,38 @@ export default async function Portfolio({ params }: Props) {
           </div>
         )}
 
-        {/* Hero Architectural Campus Banner */}
-        <div className="relative h-60 sm:h-80 w-full overflow-hidden bg-[#001633] select-none">
-          <img
-            src="/icfai-building.jpg"
-            alt="ICFAI University Main Building"
-            className="w-full h-full object-cover object-center brightness-95"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#001633]/90 via-[#002147]/50 to-transparent" />
-          <div className="absolute bottom-6 left-6 sm:left-10 text-white max-w-xl">
-            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight drop-shadow-md">
-              {d.name || 'Faculty Portfolio'}
-            </h2>
-            <p className="text-xs sm:text-sm text-blue-100 mt-1 font-medium drop-shadow-sm">
-              {[d.designation, d.department, d.institution].filter(Boolean).join(' • ')}
-            </p>
+        {/* Hero Campus Faculty Group Banner (100% Visible on all devices) */}
+        <div className="w-full bg-slate-900 border-b border-slate-200 overflow-hidden select-none">
+          <div className="w-full relative aspect-[1280/851] max-w-full mx-auto">
+            <img
+              src="/icfai-building.jpg"
+              alt="IcfaiTech Faculty of Science and Technology"
+              className="w-full h-full object-contain md:object-cover block"
+            />
           </div>
+        </div>
+
+        {/* Faculty Name & Academic Title Section */}
+        <div className="bg-[#002147] text-white px-6 sm:px-12 py-6 sm:py-8 border-b border-[#001633] shadow-inner">
+          <div className="flex flex-wrap items-center gap-2 mb-2.5">
+            <span className="inline-flex items-center text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-white/10 text-blue-200 border border-white/15">
+              The ICFAI University, Jaipur
+            </span>
+            <span className="inline-flex items-center text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-white/10 text-blue-200 border border-white/15">
+              IcfaiTech (FST)
+            </span>
+            {d.affiliation_badge && (
+              <span className="inline-flex items-center text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#c8102e] text-white border border-[#fbd0d5]/30">
+                {d.affiliation_badge}
+              </span>
+            )}
+          </div>
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white">
+            {d.name || 'Faculty Portfolio'}
+          </h1>
+          <p className="text-xs sm:text-sm lg:text-base text-blue-100 mt-1.5 font-medium leading-relaxed">
+            {[d.designation, d.department, d.institution].filter(Boolean).join(' • ')}
+          </p>
         </div>
 
         {/* Content Body Container */}

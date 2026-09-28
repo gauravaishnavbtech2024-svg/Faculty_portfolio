@@ -259,11 +259,11 @@ export default function PortfolioSidebar({ data }: Props) {
       )}
 
       {/* Desktop Sticky Sidebar */}
-      <aside className="hidden lg:flex w-80 shrink-0 bg-[#002147] text-white shadow-2xl lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto flex-col justify-between custom-scrollbar z-30 select-none border-r border-[#001633]">
+      <aside className="hidden lg:flex w-80 shrink-0 bg-[#002147] text-white shadow-2xl lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto flex-col justify-between no-scrollbar z-30 select-none border-r border-[#001633]">
         {/* Top Profile Card */}
-        <div className="p-8 text-center flex flex-col items-center">
+        <div className="p-6 xl:p-8 text-center flex flex-col items-center">
           {/* Avatar Frame */}
-          <div className="relative mb-5">
+          <div className="relative mb-4">
             <div className="w-32 h-32 rounded-full border-4 border-white/90 shadow-xl bg-[#001633] overflow-hidden flex items-center justify-center">
               {data.photo_url && !imgError ? (
                 <img

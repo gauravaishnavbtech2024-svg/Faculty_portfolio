@@ -16,7 +16,7 @@ export default function Upload() {
     setErr('');
     setFile(null);
     if (!f) return;
-    if (!/\.(pdf|docx)$/i.test(f.name)) return setErr('Only PDF or DOCX files are accepted.');
+    if (!/\.(pdf|docx?)$/i.test(f.name)) return setErr('Only PDF, DOC, or DOCX files are accepted.');
     if (f.size > MAX) return setErr('File is larger than 4 MB. Please upload a smaller file.');
     setFile(f);
   };
@@ -97,7 +97,7 @@ export default function Upload() {
       <div className="text-center">
         <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Upload Your CV</h1>
         <p className="mt-2 text-sm text-slate-600">
-          Upload your curriculum vitae in PDF or Word format. Gemini AI will analyze your publications, research, teaching modules, and background.
+          Upload your curriculum vitae in PDF or Word format (.pdf, .doc, .docx). Gemini AI will analyze your publications, research, teaching modules, and background.
         </p>
       </div>
 
@@ -145,7 +145,7 @@ export default function Upload() {
                 <p className="font-semibold text-slate-800 text-base">
                   Drag and drop your CV here, or <span className="text-[#002147] underline cursor-pointer font-bold">browse file</span>
                 </p>
-                <p className="text-xs text-slate-500 mt-1">Accepts PDF or DOCX (Max 4 MB)</p>
+                <p className="text-xs text-slate-500 mt-1">Accepts PDF, DOC, or DOCX (Max 4 MB)</p>
               </div>
             )}
           </div>
@@ -153,7 +153,7 @@ export default function Upload() {
           <label className="absolute inset-0 cursor-pointer">
             <input
               type="file"
-              accept=".pdf,.docx"
+              accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
               className="sr-only"
               onChange={(e) => pick(e.target.files?.[0] ?? null)}
             />
