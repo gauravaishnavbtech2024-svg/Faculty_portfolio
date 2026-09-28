@@ -14,13 +14,16 @@ interface PublicationItem extends Record<string, any> {
 
 interface Props {
   publications: PublicationItem[];
-  renderCustomFields?: (item: Record<string, any>, standardKeys: string[]) => React.ReactNode;
 }
 
-const safe = (u?: string) => (u && /^https?:\/\//i.test(u) ? u : undefined);
+const safe = (u?: string) => (u && typeof u === 'string' && /^https?:\/\//i.test(u) ? u : undefined);
 
 function normalizePublicationType(item: PublicationItem): string {
-  const rawType = (item.type || item.category || item.publication_type || item.kind || '').trim();
+  if (!item || typeof item !== 'object') return 'Academic Publications';
+
+  const rawType = String(
+    item.type || item.category || item.publication_type || item.kind || ''
+  ).trim();
 
   if (rawType) {
     const lower = rawType.toLowerCase();
@@ -35,8 +38,8 @@ function normalizePublicationType(item: PublicationItem): string {
   }
 
   // Fallback intelligent classification based on venue / title text
-  const venue = (item.venue || '').toLowerCase();
-  const title = (item.title || '').toLowerCase();
+  const venue = String(item.venue || '').toLowerCase();
+  const title = String(item.title || '').toLowerCase();
 
   if (
     /journal|transactions|ieee trans|elsevier|springer|nature|mdpi|hindawi|wiley|acm trans|letters|review|frontiers|plos|periodical/i.test(
@@ -86,15 +89,51 @@ function getCategoryBadgeColor(cat: string) {
   }
 }
 
-export default function PublicationsSection({ publications, renderCustomFields }: Props) {
+function renderItemCustomFields(item: Record<string, any>) {
+  if (!item || typeof item !== 'object') return null;
+  const standardKeys = ['title', 'authors', 'venue', 'year', 'link', 'type', 'category', '_category'];
+  const extraKeys = Object.keys(item).filter(
+    (k) => !standardKeys.includes(k) && item[k] !== undefined && item[k] !== null && String(item[k]).trim() !== ''
+  );
+  if (extraKeys.length === 0) return null;
+
+  return (
+    <div className="mt-2.5 flex flex-wrap items-center gap-1.5 pt-1.5 border-t border-slate-100">
+      {extraKeys.map((k) => (
+        <span
+          key={k}
+          className="inline-flex items-center gap-1 text-[11px] px-2.5 py-0.5 rounded-md bg-slate-100/90 text-slate-700 border border-slate-200"
+        >
+          <span className="font-bold text-slate-500 capitalize">{k.replace(/_/g, ' ')}:</span>
+          <span className="font-medium text-slate-800">
+            {typeof item[k] === 'object' ? JSON.stringify(item[k]) : String(item[k])}
+          </span>
+        </span>
+      ))}
+    </div>
+  );
+}
+
+export default function PublicationsSection({ publications }: Props) {
   const [activeTab, setActiveTab] = useState<string>('all');
 
   // Tag every publication with normalized category
   const taggedPublications = useMemo(() => {
-    return (publications || []).map((p) => ({
-      ...p,
-      _category: normalizePublicationType(p),
-    }));
+    return (publications || [])
+      .map((p) => {
+        if (!p) return null;
+        if (typeof p === 'string') {
+          return {
+            title: p,
+            _category: 'Academic Publications',
+          };
+        }
+        return {
+          ...p,
+          _category: normalizePublicationType(p),
+        };
+      })
+      .filter((p): p is PublicationItem & { _category: string } => Boolean(p));
   }, [publications]);
 
   // Aggregate category counts dynamically
@@ -221,7 +260,7 @@ export default function PublicationsSection({ publications, renderCustomFields }
                   </span>
                   {p.year && (
                     <span className="text-xs font-bold text-slate-400">
-                      • {p.year}
+                      • {String(p.year)}
                     </span>
                   )}
                 </div>
@@ -235,28 +274,27 @@ export default function PublicationsSection({ publications, renderCustomFields }
                       rel="noopener noreferrer"
                       className="text-[#002147] hover:text-[#e31e34] hover:underline"
                     >
-                      {p.title}
+                      {p.title ? String(p.title) : 'Untitled Publication'}
                     </a>
                   ) : (
-                    p.title
+                    p.title ? String(p.title) : 'Untitled Publication'
                   )}
                 </h3>
 
                 {/* Authors */}
                 {p.authors && (
-                  <p className="text-xs text-slate-600 mt-1.5 font-medium">{p.authors}</p>
+                  <p className="text-xs text-slate-600 mt-1.5 font-medium">{String(p.authors)}</p>
                 )}
 
                 {/* Venue */}
                 {p.venue && (
                   <p className="text-xs text-slate-500 mt-1 italic">
-                    {p.venue}
+                    {String(p.venue)}
                   </p>
                 )}
 
                 {/* Custom Fields */}
-                {renderCustomFields &&
-                  renderCustomFields(p, ['title', 'authors', 'venue', 'year', 'link', 'type', 'category', '_category'])}
+                {renderItemCustomFields(p)}
               </div>
 
               {/* View Link */}

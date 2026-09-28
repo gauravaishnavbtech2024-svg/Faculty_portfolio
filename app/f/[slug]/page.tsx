@@ -39,7 +39,9 @@ function renderCustomFields(item: Record<string, any>, standardKeys: string[]) {
           className="inline-flex items-center gap-1 text-[11px] px-2.5 py-0.5 rounded-md bg-slate-100/90 text-slate-700 border border-slate-200"
         >
           <span className="font-bold text-slate-500 capitalize">{k.replace(/_/g, ' ')}:</span>
-          <span className="font-medium text-slate-800">{String(item[k])}</span>
+          <span className="font-medium text-slate-800">
+            {typeof item[k] === 'object' ? JSON.stringify(item[k]) : String(item[k])}
+          </span>
         </span>
       ))}
     </div>
@@ -155,7 +157,11 @@ export default async function Portfolio({ params }: Props) {
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="font-semibold text-slate-900 text-sm truncate">
-                          {typeof course === 'string' ? course : (course as any).name || 'Course Module'}
+                          {typeof course === 'string'
+                            ? course
+                            : course && typeof course === 'object'
+                            ? (course as any).name || (course as any).title || (course as any).course || JSON.stringify(course)
+                            : String(course || 'Course Module')}
                         </p>
                         <p className="text-xs text-slate-500 mt-0.5">Faculty Course Module</p>
                       </div>
@@ -189,7 +195,13 @@ export default async function Portfolio({ params }: Props) {
                       {d.research_interests.map((r, i) => (
                         <li key={i} className="flex items-start gap-2.5 text-sm text-slate-700">
                           <span className="text-[#e31e34] font-bold mt-0.5">•</span>
-                          <span>{r}</span>
+                          <span>
+                            {typeof r === 'string'
+                              ? r
+                              : r && typeof r === 'object'
+                              ? (r as any).title || (r as any).name || (r as any).area || JSON.stringify(r)
+                              : String(r)}
+                          </span>
                         </li>
                       ))}
                     </ul>
@@ -304,7 +316,6 @@ export default async function Portfolio({ params }: Props) {
           {Array.isArray(d.publications) && d.publications.length > 0 && (
             <PublicationsSection
               publications={d.publications}
-              renderCustomFields={renderCustomFields}
             />
           )}
 
@@ -359,7 +370,9 @@ export default async function Portfolio({ params }: Props) {
                         >
                           <div className="flex items-baseline justify-between gap-2">
                             <h3 className="font-bold text-slate-900 text-base">
-                              {it.link && safe(it.link) ? (
+                              {typeof it === 'string' ? (
+                                it
+                              ) : it.link && safe(it.link) ? (
                                 <a
                                   href={it.link}
                                   target="_blank"
