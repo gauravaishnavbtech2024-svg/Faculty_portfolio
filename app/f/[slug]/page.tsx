@@ -80,12 +80,12 @@ export default async function Portfolio({ params }: Props) {
           </div>
         )}
 
-        {/* Hero Campus Faculty Group Banner (Cropped Panoramic View - 100% Visible on all devices) */}
+        {/* Hero Campus Faculty Group Banner (Faculties Group Photo - 100% Visible on all devices) */}
         <div className="w-full bg-slate-900 border-b border-slate-200 overflow-hidden select-none">
-          <div className="w-full relative aspect-[1211/425] max-w-full mx-auto">
+          <div className="w-full relative aspect-[2092/752] max-w-full mx-auto">
             <img
-              src="/icfai-building.jpg"
-              alt="IcfaiTech Faculty of Science and Technology"
+              src="/faculties-group-photo.png"
+              alt="Faculty of Science and Technology - The ICFAI University"
               className="w-full h-full object-cover block"
             />
           </div>
