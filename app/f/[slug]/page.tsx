@@ -84,12 +84,12 @@ export default async function Portfolio({ params }: Props) {
 
         {/* Hero ICFAI Main Building Banner (Dynamic & Never Cut on Phone, Tablet, or Desktop) */}
         <div className="w-full bg-[#001633] border-b border-slate-200 select-none">
-          <div className="w-full relative aspect-[1211/400]" style={{ aspectRatio: '1211 / 400' }}>
+          <div className="w-full relative aspect-[1920/825]" style={{ aspectRatio: '1920 / 825' }}>
             <img
               src="/icfai-building.jpg"
               alt="The ICFAI University, Jaipur - Main Campus Building"
-              width={1211}
-              height={400}
+              width={1920}
+              height={825}
               className="w-full h-full object-contain block"
               loading="eager"
               decoding="async"
